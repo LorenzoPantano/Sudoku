@@ -1,0 +1,28 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="LightAppTheme" parent="Theme.AppCompat.NoActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/pantone_classic_blue</item>
+        <item name="background">@color/background_white</item>
+        <item name="android:statusBarColor">@color/grey_whiter</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="fontFamily">@font/raleway_semibold</item>
+    </style>
+
+    <style name="DarkAppTheme" parent="Theme.AppCompat.NoActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="background">@color/background_black</item>
+        <item name="android:statusBarColor">@color/grey_dark</item>
+        <item name="fontFamily">@font/raleway_semibold</item>
+    </style>
+
+    <!-- Dialog Themes -->
+    <style name="DialogTheme" parent="Theme.AppCompat.Light.Dialog.Alert">
+        <item name="android:background">@color/transparent</item>
+    </style>
+
+
+</resources>

@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/dialog_shape">
+
+            <TextView
+                android:id="@+id/tvInfoAppName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/app_name"
+                android:textColor="@color/pantone_classic_blue"
+                android:textSize="17sp"
+                android:padding="15dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+            </TextView>
+
+            <TextView
+                android:id="@+id/tvInfoDevelopedBy"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/developed"
+                android:layout_marginLeft="15dp"
+                android:textSize="10sp"
+                android:textColor="@color/grey_whiter"
+                app:layout_constraintTop_toBottomOf="@+id/tvInfoAppName"
+                app:layout_constraintStart_toStartOf="parent">
+            </TextView>
+
+
+            <TextView
+                android:id="@+id/tvInfoAuthors"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/authors"
+                android:textSize="10sp"
+                android:layout_marginLeft="15dp"
+                android:textColor="@color/grey_whiter"
+                app:layout_constraintTop_toBottomOf="@+id/tvInfoDevelopedBy"
+                app:layout_constraintStart_toStartOf="parent">
+            </TextView>
+
+            <TextView
+                android:id="@+id/tvIndoMobileProg"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/mobileprog"
+                android:textSize="10sp"
+                android:layout_marginLeft="15dp"
+                android:textColor="@color/grey_whiter"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tvInfoAuthors">
+            </TextView>
+
+            <TextView
+                android:id="@+id/tvInfoVersion"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@id/tvIndoMobileProg"
+                app:layout_constraintStart_toStartOf="parent"
+                android:text="@string/version"
+                android:textSize="9sp"
+                android:layout_marginLeft="15dp"
+                android:layout_marginBottom="15dp"
+                android:layout_marginTop="10dp"
+                android:textColor="@color/background_black">
+            </TextView>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,0 +1,24 @@
+<resources>
+    <string name="app_name">Sudoku</string>
+    <string name="title">sudoku.</string>
+    <string name="new_game">New Game</string>
+    <string name="resume">Resume</string>
+    <string name="difficulty">Difficulty</string>
+    <string name="difficulty_mode">Easy</string>
+    <string name="title_activity_settings">Settings</string>
+
+    <!-- Info Dialog-->
+    <string name="version">version 1.0.0</string>
+    <string name="developed">This app is developed by the group \"Daloma\"</string>
+    <string name="authors">Lorenzo Pantano\nMatteo D\'Alessandro\nDavide Palleschi</string>
+    <string name="mobileprog">For Mobile Programming 2020</string>
+
+
+    <!-- Preference Titles -->
+    <string name="general">General</string>
+    <string name="theme">Theme</string>
+
+    <!-- Notifications Preferences -->
+
+
+</resources>
