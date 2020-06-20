@@ -2,77 +2,213 @@ package it.daloma.sudoku;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
 import android.widget.Button;
 import android.widget.GridLayout;
 
 public class GameActivity extends AppCompatActivity {
+
+    Button[] buttons = new Button[10];
+    private static final int[] BUTTON_IDS = {
+            R.id.button1,
+            R.id.button2,
+            R.id.button3,
+            R.id.button4,
+            R.id.button5,
+            R.id.button6,
+            R.id.button7,
+            R.id.button8,
+            R.id.button9,
+            R.id.buttonCancel
+    };
+
+    boolean[] isPressed = new boolean[10];
+    NumbersOnClickListener numbersOnClickListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game);
 
-        Button button1,button2,button3,button4,button5,button6,button7,button8,button9,buttonCancel;
-        button1 = findViewById(R.id.button1);
-        button2 = findViewById(R.id.button2);
-        button3 = findViewById(R.id.button3);
-        button4 = findViewById(R.id.button4);
-        button5 = findViewById(R.id.button5);
-        button6 = findViewById(R.id.button6);
-        button7 = findViewById(R.id.button7);
-        button8 = findViewById(R.id.button8);
-        button9 = findViewById(R.id.button9);
-        buttonCancel = findViewById(R.id.buttonCancel);
 
-        GridLayout.LayoutParams params = (GridLayout.LayoutParams) button1.getLayoutParams();
-        params.width = getResources().getDisplayMetrics().widthPixels / 7;
-        params.height = params.width;
-        button1.setLayoutParams(params);
+        //Controls Setup
+        numbersOnClickListener = new NumbersOnClickListener();
+        for (int i = 0; i < 10; i++) {
+            buttons[i] = findViewById(BUTTON_IDS[i]);
+            buttons[i].setOnClickListener(numbersOnClickListener);
+            GridLayout.LayoutParams params = (GridLayout.LayoutParams) buttons[i].getLayoutParams();
+            params.width = getResources().getDisplayMetrics().widthPixels / 7;
+            params.height = params.width;
+            buttons[i].setLayoutParams(params);
+        }
+    }
 
-        GridLayout.LayoutParams params2 = (GridLayout.LayoutParams) button2.getLayoutParams();
-        params2.width = getResources().getDisplayMetrics().widthPixels / 7;
-        params2.height = params2.width;
-        button2.setLayoutParams(params2);
+    private class NumbersOnClickListener implements View.OnClickListener {
 
-        GridLayout.LayoutParams params3 = (GridLayout.LayoutParams) button3.getLayoutParams();
-        params3.width = getResources().getDisplayMetrics().widthPixels / 7;
-        params3.height = params3.width;
-        button3.setLayoutParams(params3);
 
-        GridLayout.LayoutParams params4 = (GridLayout.LayoutParams) button4.getLayoutParams();
-        params4.width = getResources().getDisplayMetrics().widthPixels / 7;
-        params4.height = params4.width;
-        button4.setLayoutParams(params4);
+        private static final String TAG = "NUMBERS_ONCLICK";
 
-        GridLayout.LayoutParams params5 = (GridLayout.LayoutParams) button5.getLayoutParams();
-        params5.width = getResources().getDisplayMetrics().widthPixels / 7;
-        params5.height = params5.width;
-        button5.setLayoutParams(params5);
+        public NumbersOnClickListener() {
+            for (int i = 0; i < 9; i++) {
+                isPressed[i] = false;
+            }
+        }
 
-        GridLayout.LayoutParams params6 = (GridLayout.LayoutParams) button6.getLayoutParams();
-        params6.width = getResources().getDisplayMetrics().widthPixels / 7;
-        params6.height = params6.width;
-        button6.setLayoutParams(params6);
+        void setIsPressed(int number, boolean pressed) {
+            isPressed[number] = pressed;
+        }
 
-        GridLayout.LayoutParams params7 = (GridLayout.LayoutParams) button7.getLayoutParams();
-        params7.width = getResources().getDisplayMetrics().widthPixels / 7;
-        params7.height = params7.width;
-        button7.setLayoutParams(params7);
+        boolean getIsPressed(int number) {
+            return isPressed[number];
+        }
 
-        GridLayout.LayoutParams params8 = (GridLayout.LayoutParams) button8.getLayoutParams();
-        params8.width = getResources().getDisplayMetrics().widthPixels / 7;
-        params8.height = params8.width;
-        button8.setLayoutParams(params8);
+        @Override
+        public void onClick(View v) {
 
-        GridLayout.LayoutParams params9 = (GridLayout.LayoutParams) button9.getLayoutParams();
-        params9.width = getResources().getDisplayMetrics().widthPixels / 7;
-        params9.height = params9.width;
-        button9.setLayoutParams(params9);
+            Log.w(TAG, "onClick: Clicked");
 
-        GridLayout.LayoutParams paramsCancel = (GridLayout.LayoutParams) buttonCancel.getLayoutParams();
-        paramsCancel.width = getResources().getDisplayMetrics().widthPixels / 7;
-        paramsCancel.height = paramsCancel.width;
-        buttonCancel.setLayoutParams(paramsCancel);
+            switch (v.getId()) {
+                case R.id.button1:
+                    //Se è già "premuto"
+                    if (!getIsPressed(0)) {
+                        Log.w(TAG, "BUTTON 1 PRESSED");
+                        press(buttons[0], 0);
+                        break;
+                    }
+                    else {
+                        Log.w(TAG, "BUTTON 1 DEPRESSED");
+                        dePress(buttons[0], 0);
+                        break;
+                    }
+
+                case R.id.button2:
+                    if (!getIsPressed(1)) {
+                        Log.w(TAG, "BUTTON 2 PRESSED");
+                        press(buttons[1], 1);
+                        break;
+                    }
+                    else {
+                        Log.w(TAG, "BUTTON 2 DEPRESSED");
+                        dePress(buttons[1], 1);
+                        break;
+                    }
+
+                case R.id.button3:
+                    if (!getIsPressed(2)) {
+                        Log.w(TAG, "BUTTON 3 PRESSED");
+                        press(buttons[2], 2);
+                        break;
+                    }
+                    else {
+                        Log.w(TAG, "BUTTON 3 DEPRESSED");
+                        dePress(buttons[2], 2);
+                        break;
+                    }
+
+                case R.id.button4:
+                    if (!getIsPressed(3)) {
+                        Log.w(TAG, "BUTTON 4 PRESSED");
+                        press(buttons[3], 3);
+                        break;
+                    }
+                    else {
+                        Log.w(TAG, "BUTTON 4 DEPRESSED");
+                        dePress(buttons[3], 3);
+                        break;
+                    }
+
+                case R.id.button5:
+                    if (!getIsPressed(4)) {
+                        Log.w(TAG, "BUTTON 5 PRESSED");
+                        press(buttons[4], 4);
+                        break;
+                    }
+                    else {
+                        Log.w(TAG, "BUTTON 5 DEPRESSED");
+                        dePress(buttons[4], 4);
+                        break;
+                    }
+
+                case R.id.button6:
+                    if (!getIsPressed(5)) {
+                        Log.w(TAG, "BUTTON 6 PRESSED");
+                        press(buttons[5], 5);
+                        break;
+                    }
+                    else {
+                        Log.w(TAG, "BUTTON 6 DEPRESSED");
+                        dePress(buttons[5], 5);
+                        break;
+                    }
+
+                case R.id.button7:
+                    if (!getIsPressed(6)) {
+                        Log.w(TAG, "BUTTON 7 PRESSED");
+                        press(buttons[6], 6);
+                        break;
+                    }
+                    else {
+                        Log.w(TAG, "BUTTON 7 DEPRESSED");
+                        dePress(buttons[6], 6);
+                        break;
+                    }
+
+                case R.id.button8:
+                    if (!getIsPressed(7)) {
+                        Log.w(TAG, "BUTTON 8 PRESSED");
+                        press(buttons[7], 7);
+                        break;
+                    }
+                    else {
+                        Log.w(TAG, "BUTTON 8 DEPRESSED");
+                        dePress(buttons[7], 7);
+                        break;
+                    }
+
+                case R.id.button9:
+                    if (!getIsPressed(8)) {
+                        Log.w(TAG, "BUTTON 9 PRESSED");
+                        press(buttons[8], 8);
+                        break;
+                    }
+                    else {
+                        Log.w(TAG, "BUTTON 9 DEPRESSED");
+                        dePress(buttons[8], 8);
+                        break;
+                    }
+
+                case R.id.buttonCancel:
+                    if (!getIsPressed(9)) {
+                        Log.w(TAG, "BUTTON CANCEL PRESSED");
+                        press(buttons[9], 9);
+                        break;
+                    }
+                    else {
+                        Log.w(TAG, "BUTTON CANCEL DEPRESSED");
+                        dePress(buttons[9], 9);
+                        break;
+                    }
+            }
+
+        }
+    }
+
+    public void press(Button button, int number) {
+        button.setTextColor(Color.WHITE);
+        button.setBackground(getDrawable(R.drawable.circular_button_pressed));
+        numbersOnClickListener.setIsPressed(number,true);
+        for (int i = 0; i < 10; i++) {
+            if (i == number) continue;
+            dePress(buttons[i], i);
+        }
+    }
+
+    public void dePress(Button button, int number) {
+        button.setTextColor(getColor(R.color.pantone_classic_blue));
+        button.setBackground(getDrawable(R.drawable.circular_button_nonpressed));
+        numbersOnClickListener.setIsPressed(number, false);
     }
 }
