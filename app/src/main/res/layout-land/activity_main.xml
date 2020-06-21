@@ -62,8 +62,8 @@
         android:backgroundTint="#00FFFFFF"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:srcCompat="@drawable/info"
-        tools:srcCompat="@drawable/info" />
+        app:srcCompat="@drawable/baseline_info_24"
+        android:tint="@color/pantone_classic_blue" />
 
     <ImageButton
         android:id="@+id/imgbtnMenu"
@@ -74,8 +74,9 @@
         android:backgroundTint="#00FFFFFF"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/menu"
-        tools:srcCompat="@drawable/menu" />
+        app:srcCompat="@drawable/baseline_equalizer_24"
+        android:tint="@color/pantone_classic_blue"
+        />
 
     <ImageButton
         android:id="@+id/imgbtnSettings"
@@ -86,6 +87,7 @@
         android:backgroundTint="#00FFFFFF"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/settings" />
+        android:tint="@color/pantone_classic_blue"
+        app:srcCompat="@drawable/baseline_settings_24" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

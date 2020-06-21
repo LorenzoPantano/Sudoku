@@ -9,6 +9,7 @@
     <color name="colorPrimaryDark">#3700B3</color>
     <color name="colorAccent">#03DAC5</color>
     <color name="background_white">#FFFFFF</color>
+    <color name="errors_red">#FF5656</color>
 
     <!-- Dark Theme -->
     <color name="background_black">#121212</color>
