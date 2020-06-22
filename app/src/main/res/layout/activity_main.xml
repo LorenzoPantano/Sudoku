@@ -91,7 +91,7 @@
         app:srcCompat="@drawable/baseline_settings_24" />
 
     <ImageButton
-        android:id="@+id/imageButton3"
+        android:id="@+id/imgbtnArrowRight"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="32dp"
@@ -103,7 +103,7 @@
         app:srcCompat="@drawable/baseline_arrow_forward_ios_white_24" />
 
     <ImageButton
-        android:id="@+id/imageButton4"
+        android:id="@+id/imgbtnArrowLeft"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
@@ -114,16 +114,13 @@
         android:tint="@color/pantone_classic_blue"
         android:backgroundTint="@color/transparent"/>
 
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="wrap_content"
+    <TextSwitcher
+        android:id="@+id/textSwitcherDifficulty"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginBottom="36dp"
-        android:text="Easy"
-        android:textSize="18sp"
-        android:textColor="@color/pantone_classic_blue"
         app:layout_constraintBottom_toTopOf="@+id/btnNewGame"
-        app:layout_constraintEnd_toStartOf="@+id/imageButton3"
-        app:layout_constraintStart_toEndOf="@+id/imageButton4" />
+        app:layout_constraintEnd_toStartOf="@+id/imgbtnArrowRight"
+        app:layout_constraintStart_toEndOf="@+id/imgbtnArrowLeft"></TextSwitcher>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -8,6 +8,7 @@ import android.view.View;
 
 import androidx.annotation.Nullable;
 
+
 public class SudokuView extends View {
 
     //Attributes
