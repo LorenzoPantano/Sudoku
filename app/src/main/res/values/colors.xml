@@ -2,6 +2,7 @@
 <resources>
 
     <color name="pantone_classic_blue">#0F4C81</color>
+    <color name="pantone_classic_blue_75opacity">#BF0F4C81</color>
     <color name="transparent">#00FFFFFF</color>
 
     <!-- Default Theme -->

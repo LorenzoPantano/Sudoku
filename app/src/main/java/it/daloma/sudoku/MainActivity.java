@@ -21,7 +21,7 @@ import android.widget.ViewSwitcher;
 public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "MAIN_ACTIVITY";
-    private ImageButton imgbtnInfo, imgbtnSettings, imgbtnMenu, imgbtnArrowLeft, imgbtnArrowRight;
+    private ImageButton imgbtnInfo, imgbtnSettings, imgbtnStats, imgbtnArrowLeft, imgbtnArrowRight;
     private Button btnNewGame, btnResume;
     private TextView tvDifficulty;
     private TextSwitcher textSwitcherDifficulty;
@@ -39,11 +39,11 @@ public class MainActivity extends AppCompatActivity {
 
         //Icons Buttons
         imgbtnInfo = findViewById(R.id.imgbtnInfo);
-        imgbtnMenu = findViewById(R.id.imgbtnMenu);
+        imgbtnStats = findViewById(R.id.imgbtnStats);
         imgbtnSettings = findViewById(R.id.imgbtnSettings);
         imgbtnInfo.setOnClickListener(mainActivityButtonsListener);
         imgbtnSettings.setOnClickListener(mainActivityButtonsListener);
-        imgbtnMenu.setOnClickListener(mainActivityButtonsListener);
+        imgbtnStats.setOnClickListener(mainActivityButtonsListener);
 
         //Arrows
         imgbtnArrowLeft = findViewById(R.id.imgbtnArrowLeft);
@@ -126,6 +126,10 @@ public class MainActivity extends AppCompatActivity {
                     textSwitcherDifficulty.setText(difficulties[selectedDifficulty]);
                     Log.d(TAG, "SELECTED DIFFICULTY: " + selectedDifficulty);
                     break;
+
+                case R.id.imgbtnStats:
+                    Intent statsIntent = new Intent(MainActivity.this, StatsActivity.class);
+                    startActivity(statsIntent);
             }
         }
     }
