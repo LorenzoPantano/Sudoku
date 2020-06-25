@@ -1,6 +1,7 @@
 package it.daloma.sudoku;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProviders;
 
 import android.graphics.Color;
 import android.os.Bundle;
@@ -9,8 +10,12 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.GridLayout;
 
+import it.daloma.sudoku.model.SudokuModel;
+import it.daloma.sudoku.model.SudokuViewModel;
+
 public class GameActivity extends AppCompatActivity {
 
+    //Controls Buttons
     Button[] buttons = new Button[10];
     private static final int[] BUTTON_IDS = {
             R.id.button1,
@@ -24,15 +29,16 @@ public class GameActivity extends AppCompatActivity {
             R.id.button9,
             R.id.buttonCancel
     };
-
     boolean[] isPressed = new boolean[10];
     NumbersOnClickListener numbersOnClickListener;
+
+    //Model
+    SudokuViewModel sudokuViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game);
-
 
         //Controls Setup
         numbersOnClickListener = new NumbersOnClickListener();
@@ -44,6 +50,10 @@ public class GameActivity extends AppCompatActivity {
             params.height = params.width;
             buttons[i].setLayoutParams(params);
         }
+
+        //Model Setup
+        sudokuViewModel = ViewModelProviders.of(this).get(SudokuViewModel.class);
+
     }
 
     private class NumbersOnClickListener implements View.OnClickListener {

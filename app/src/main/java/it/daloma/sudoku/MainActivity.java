@@ -4,8 +4,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.res.ResourcesCompat;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Typeface;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
@@ -18,6 +21,12 @@ import android.widget.TextSwitcher;
 import android.widget.TextView;
 import android.widget.ViewSwitcher;
 
+import java.util.ArrayList;
+
+import it.daloma.sudoku.model.Board;
+import it.daloma.sudoku.model.Cell;
+import it.daloma.sudoku.threads.NewGameThread;
+
 public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "MAIN_ACTIVITY";
@@ -26,8 +35,11 @@ public class MainActivity extends AppCompatActivity {
     private TextView tvDifficulty;
     private TextSwitcher textSwitcherDifficulty;
     private static final String[] difficulties = {"Easy", "Medium", "Hard"};
-    public int[][] easyPuzzle = new int[9][9];
+    public int[][] puzzle = new int[9][9];
     private int selectedDifficulty = 0;  //Potrebbe essere preso da SharedPreferences salvando l'ultima partita
+    private Board board;
+    private NewGameThread sudokuGeneratorThread;
+    private SudokuGenerator sudokuGenerator;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,25 +92,17 @@ public class MainActivity extends AppCompatActivity {
         textSwitcherDifficulty.setInAnimation(inAnimation);
         textSwitcherDifficulty.setOutAnimation(outAnimation);
 
-        //Sudoku Generator (Thread)
-        final SudokuGenerator sudokuGenerator = new SudokuGenerator(this);
-
-        Thread sudokuGeneratorThread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-               sudokuGenerator.puzzleGenerator(selectedDifficulty);
-               easyPuzzle = sudokuGenerator.getPuzzle();
-            }
-        });
+         sudokuGenerator = new SudokuGenerator(this);
 
     }
 
-    public static void print2D(int[][] mat)
-    {
-        for (int[] ints : mat)
-            for (int j = 0; j < ints.length; j++)
-                System.out.print(ints[j] + " ");
+    private boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
+
 
     private class MainActivityButtonsListener implements View.OnClickListener {
 
@@ -106,12 +110,13 @@ public class MainActivity extends AppCompatActivity {
         public void onClick(View v) {
             switch (v.getId()) {
                 case R.id.btnNewGame:
-                    SudokuPuzzle sudokuPuzzle = new SudokuPuzzle(Globals.EASY, easyPuzzle);
-                    int diff = sudokuPuzzle.getDifficulty();
-                    System.out.println(diff);
-                    print2D(sudokuPuzzle.getPuzzle());
-                    Intent gameIntent = new Intent(MainActivity.this, GameActivity.class);
-                    startActivity(gameIntent);
+                    sudokuGeneratorThread = new NewGameThread(selectedDifficulty, sudokuGenerator);
+                    sudokuGeneratorThread.start();
+                    while (sudokuGeneratorThread.isAlive()) {
+                        Log.d(TAG, "onClick: WAITING");
+                    }
+                    puzzle = sudokuGenerator.getPuzzle();
+                    newGameAction();
                     break;
 
                 case R.id.imgbtnArrowLeft:
@@ -131,6 +136,24 @@ public class MainActivity extends AppCompatActivity {
                     Intent statsIntent = new Intent(MainActivity.this, StatsActivity.class);
                     startActivity(statsIntent);
             }
+        }
+
+        private void newGameAction() {
+            SudokuPuzzle sudokuPuzzle = new SudokuPuzzle(selectedDifficulty, puzzle);
+            int diff = sudokuPuzzle.getDifficulty();
+            System.out.println(diff);
+            ArrayList<Cell> cellArrayList = new ArrayList<>();
+            Cell cell;
+            for (int row = 0; row < 9; row++) {
+                for (int col = 0; col < 9; col++) {
+                    cell = new Cell(row, col, puzzle[row][col]);
+                    cellArrayList.add(cell);
+                }
+            }
+            board = new Board(cellArrayList);
+            board.printBoard();
+            Intent gameIntent = new Intent(MainActivity.this, GameActivity.class);
+            startActivity(gameIntent);
         }
     }
 

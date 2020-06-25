@@ -47,8 +47,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="24dp"
-        android:layout_marginTop="64dp"
         android:columnCount="5"
+        app:layout_constraintBottom_toTopOf="@+id/linearLayout2"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/sudokuView">
@@ -161,40 +161,39 @@
         android:tint="@color/pantone_classic_blue"/>
 
     <LinearLayout
+        android:id="@+id/linearLayout2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
-        android:layout_marginTop="64dp"
         android:layout_marginBottom="32dp"
         android:orientation="horizontal"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/gridLayoutControls">
+        app:layout_constraintStart_toStartOf="parent">
 
         <ImageButton
             android:id="@+id/imgbtnRestart"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:background="@drawable/controls_circular_buttons"
             android:backgroundTint="@color/transparent"
             android:src="@drawable/baseline_refresh_24"
-            android:tint="@color/pantone_classic_blue"
-            android:background="@drawable/controls_circular_buttons"/>
+            android:tint="@color/pantone_classic_blue" />
 
         <ImageButton
             android:id="@+id/imgbtnEdit"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:background="@drawable/controls_circular_buttons"
             android:backgroundTint="@color/transparent"
             android:src="@drawable/baseline_edit_24"
-            android:tint="@color/pantone_classic_blue"
-            android:background="@drawable/controls_circular_buttons"/>
+            android:tint="@color/pantone_classic_blue" />
 
         <ImageButton
             android:id="@+id/imgbtnUndo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:backgroundTint="@color/transparent"
             android:background="@drawable/controls_circular_buttons"
+            android:backgroundTint="@color/transparent"
             android:src="@drawable/baseline_undo_24"
             android:tint="@color/pantone_classic_blue" />
 
@@ -202,8 +201,8 @@
             android:id="@+id/imgbtnHint"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:backgroundTint="@color/transparent"
             android:background="@drawable/controls_circular_buttons"
+            android:backgroundTint="@color/transparent"
             android:src="@drawable/baseline_emoji_objects_24"
             android:tint="@color/pantone_classic_blue" />
 
@@ -214,23 +213,18 @@
         android:id="@+id/imageButton2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="64dp"
         android:layout_marginEnd="24dp"
         android:layout_marginBottom="32dp"
+        android:backgroundTint="@color/transparent"
+        android:tint="@color/pantone_classic_blue"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/gridLayoutControls"
-        app:srcCompat="@drawable/baseline_done_white_36"
-        android:tint="@color/pantone_classic_blue"
-        android:backgroundTint="@color/transparent"/>
+        app:srcCompat="@drawable/baseline_done_white_36" />
 
-    <it.daloma.sudoku.SudokuView
+    <it.daloma.sudoku.view.SudokuView
         android:id="@+id/sudokuView"
         android:layout_width="0dp"
         android:layout_height="200dp"
-        android:layout_marginStart="24dp"
-        android:layout_marginTop="24dp"
-        android:layout_marginEnd="24dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tvDifficultyGame" />
