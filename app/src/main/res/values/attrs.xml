@@ -1,5 +1,5 @@
 <resources>
-    <declare-styleable name="SudokuView">
+    <declare-styleable name="SudokuBoardView">
         <attr name="numbersColor" format="integer"/>
         <attr name="gridColor" format="integer"/>
     </declare-styleable>

@@ -1,17 +1,18 @@
 package it.daloma.sudoku;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.ViewModelProviders;
 
-import android.graphics.Color;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.GridLayout;
 
-import it.daloma.sudoku.model.SudokuModel;
-import it.daloma.sudoku.model.SudokuViewModel;
+import it.daloma.sudoku.models.Board;
+import it.daloma.sudoku.models.SudokuModel;
+import it.daloma.sudoku.view.SudokuBoardView;
+
 
 public class GameActivity extends AppCompatActivity {
 
@@ -29,16 +30,31 @@ public class GameActivity extends AppCompatActivity {
             R.id.button9,
             R.id.buttonCancel
     };
-    boolean[] isPressed = new boolean[10];
-    NumbersOnClickListener numbersOnClickListener;
 
-    //Model
-    SudokuViewModel sudokuViewModel;
+    NumbersOnClickListener numbersOnClickListener;
+    private Board board;
+    private SudokuModel sudokuModel;
+    private SudokuBoardView sudokuBoardView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game);
+
+        /*
+        * NEW GAME
+        *
+        * Board Setup
+        * */
+        Intent gameIntent = getIntent();
+        boolean isNewGame = gameIntent.getBooleanExtra("new game", false);
+        if (isNewGame) {
+            board = gameIntent.getParcelableExtra("Board");
+            sudokuModel = new SudokuModel(board, isNewGame);
+            sudokuModel.getBoard().printBoard();
+            sudokuBoardView = findViewById(R.id.sudokuView);
+            sudokuBoardView.setSudokuModel(sudokuModel);
+        }
 
         //Controls Setup
         numbersOnClickListener = new NumbersOnClickListener();
@@ -51,9 +67,11 @@ public class GameActivity extends AppCompatActivity {
             buttons[i].setLayoutParams(params);
         }
 
-        //Model Setup
-        sudokuViewModel = ViewModelProviders.of(this).get(SudokuViewModel.class);
+    }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
     }
 
     private class NumbersOnClickListener implements View.OnClickListener {
@@ -62,17 +80,7 @@ public class GameActivity extends AppCompatActivity {
         private static final String TAG = "NUMBERS_ONCLICK";
 
         public NumbersOnClickListener() {
-            for (int i = 0; i < 9; i++) {
-                isPressed[i] = false;
-            }
-        }
 
-        void setIsPressed(int number, boolean pressed) {
-            isPressed[number] = pressed;
-        }
-
-        boolean getIsPressed(int number) {
-            return isPressed[number];
         }
 
         @Override
@@ -82,143 +90,47 @@ public class GameActivity extends AppCompatActivity {
 
             switch (v.getId()) {
                 case R.id.button1:
-                    //Se è già "premuto"
-                    if (!getIsPressed(0)) {
-                        Log.w(TAG, "BUTTON 1 PRESSED");
-                        press(buttons[0], 0);
-                        break;
-                    }
-                    else {
-                        Log.w(TAG, "BUTTON 1 DEPRESSED");
-                        dePress(buttons[0], 0);
-                        break;
-                    }
+                    Log.w(TAG, "BUTTON 1 PRESSED");
+                    break;
 
                 case R.id.button2:
-                    if (!getIsPressed(1)) {
-                        Log.w(TAG, "BUTTON 2 PRESSED");
-                        press(buttons[1], 1);
-                        break;
-                    }
-                    else {
-                        Log.w(TAG, "BUTTON 2 DEPRESSED");
-                        dePress(buttons[1], 1);
-                        break;
-                    }
+                    Log.w(TAG, "BUTTON 2 PRESSED");
+                    break;
 
                 case R.id.button3:
-                    if (!getIsPressed(2)) {
-                        Log.w(TAG, "BUTTON 3 PRESSED");
-                        press(buttons[2], 2);
-                        break;
-                    }
-                    else {
-                        Log.w(TAG, "BUTTON 3 DEPRESSED");
-                        dePress(buttons[2], 2);
-                        break;
-                    }
+                    Log.w(TAG, "BUTTON 3 PRESSED");
+                    break;
 
                 case R.id.button4:
-                    if (!getIsPressed(3)) {
-                        Log.w(TAG, "BUTTON 4 PRESSED");
-                        press(buttons[3], 3);
-                        break;
-                    }
-                    else {
-                        Log.w(TAG, "BUTTON 4 DEPRESSED");
-                        dePress(buttons[3], 3);
-                        break;
-                    }
+                    Log.w(TAG, "BUTTON 4 PRESSED");
+                    break;
 
                 case R.id.button5:
-                    if (!getIsPressed(4)) {
-                        Log.w(TAG, "BUTTON 5 PRESSED");
-                        press(buttons[4], 4);
-                        break;
-                    }
-                    else {
-                        Log.w(TAG, "BUTTON 5 DEPRESSED");
-                        dePress(buttons[4], 4);
-                        break;
-                    }
+                    Log.w(TAG, "BUTTON 5 PRESSED");
+                    break;
 
                 case R.id.button6:
-                    if (!getIsPressed(5)) {
-                        Log.w(TAG, "BUTTON 6 PRESSED");
-                        press(buttons[5], 5);
-                        break;
-                    }
-                    else {
-                        Log.w(TAG, "BUTTON 6 DEPRESSED");
-                        dePress(buttons[5], 5);
-                        break;
-                    }
+                    Log.w(TAG, "BUTTON 6 PRESSED");
+                    break;
 
                 case R.id.button7:
-                    if (!getIsPressed(6)) {
-                        Log.w(TAG, "BUTTON 7 PRESSED");
-                        press(buttons[6], 6);
-                        break;
-                    }
-                    else {
-                        Log.w(TAG, "BUTTON 7 DEPRESSED");
-                        dePress(buttons[6], 6);
-                        break;
-                    }
+                    Log.w(TAG, "BUTTON 7 PRESSED");
+                    break;
 
                 case R.id.button8:
-                    if (!getIsPressed(7)) {
-                        Log.w(TAG, "BUTTON 8 PRESSED");
-                        press(buttons[7], 7);
-                        break;
-                    }
-                    else {
-                        Log.w(TAG, "BUTTON 8 DEPRESSED");
-                        dePress(buttons[7], 7);
-                        break;
-                    }
+                    Log.w(TAG, "BUTTON 8 PRESSED");
+                    break;
 
                 case R.id.button9:
-                    if (!getIsPressed(8)) {
-                        Log.w(TAG, "BUTTON 9 PRESSED");
-                        press(buttons[8], 8);
-                        break;
-                    }
-                    else {
-                        Log.w(TAG, "BUTTON 9 DEPRESSED");
-                        dePress(buttons[8], 8);
-                        break;
-                    }
+                    Log.w(TAG, "BUTTON 9 PRESSED");
+                    break;
 
                 case R.id.buttonCancel:
-                    if (!getIsPressed(9)) {
-                        Log.w(TAG, "BUTTON CANCEL PRESSED");
-                        press(buttons[9], 9);
-                        break;
-                    }
-                    else {
-                        Log.w(TAG, "BUTTON CANCEL DEPRESSED");
-                        dePress(buttons[9], 9);
-                        break;
-                    }
+                    Log.w(TAG, "BUTTON CANCEL PRESSED");
+                    break;
             }
 
         }
     }
 
-    public void press(Button button, int number) {
-        button.setTextColor(Color.WHITE);
-        button.setBackground(getDrawable(R.drawable.circular_button_pressed));
-        numbersOnClickListener.setIsPressed(number,true);
-        for (int i = 0; i < 10; i++) {
-            if (i == number) continue;
-            dePress(buttons[i], i);
-        }
-    }
-
-    public void dePress(Button button, int number) {
-        button.setTextColor(getColor(R.color.pantone_classic_blue));
-        button.setBackground(getDrawable(R.drawable.circular_button_nonpressed));
-        numbersOnClickListener.setIsPressed(number, false);
-    }
 }

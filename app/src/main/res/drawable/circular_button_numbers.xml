@@ -6,4 +6,11 @@
             <solid android:color="@color/background_white"/>
         </shape>
     </item>
+
+    <item android:state_pressed="true">
+        <shape android:shape="oval">
+            <stroke android:width="2dp" android:color="@color/pantone_classic_blue" />
+            <solid android:color="@color/pantone_classic_blue"/>
+        </shape>
+    </item>
 </selector>

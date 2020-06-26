@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.res.ResourcesCompat;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Typeface;
@@ -21,25 +22,19 @@ import android.widget.TextSwitcher;
 import android.widget.TextView;
 import android.widget.ViewSwitcher;
 
-import java.util.ArrayList;
-
-import it.daloma.sudoku.model.Board;
-import it.daloma.sudoku.model.Cell;
-import it.daloma.sudoku.threads.NewGameThread;
+import it.daloma.sudoku.utils.LoadingDialog;
 
 public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "MAIN_ACTIVITY";
     private ImageButton imgbtnInfo, imgbtnSettings, imgbtnStats, imgbtnArrowLeft, imgbtnArrowRight;
     private Button btnNewGame, btnResume;
-    private TextView tvDifficulty;
     private TextSwitcher textSwitcherDifficulty;
     private static final String[] difficulties = {"Easy", "Medium", "Hard"};
     public int[][] puzzle = new int[9][9];
     private int selectedDifficulty = 0;  //Potrebbe essere preso da SharedPreferences salvando l'ultima partita
-    private Board board;
-    private NewGameThread sudokuGeneratorThread;
     private SudokuGenerator sudokuGenerator;
+    private LoadingDialog loadingDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,7 +65,6 @@ public class MainActivity extends AppCompatActivity {
         btnResume.setOnClickListener(mainActivityButtonsListener);
 
         //Difficulty
-        tvDifficulty = findViewById(R.id.tvDifficultyGame);
         textSwitcherDifficulty = findViewById(R.id.textSwitcherDifficulty);
         textSwitcherDifficulty.setFactory(new ViewSwitcher.ViewFactory() {
             @Override
@@ -92,8 +86,9 @@ public class MainActivity extends AppCompatActivity {
         textSwitcherDifficulty.setInAnimation(inAnimation);
         textSwitcherDifficulty.setOutAnimation(outAnimation);
 
-         sudokuGenerator = new SudokuGenerator(this);
-
+        //SudokuGenerator
+        sudokuGenerator = new SudokuGenerator(this);
+        loadingDialog = new LoadingDialog(MainActivity.this);
     }
 
     private boolean isNetworkAvailable() {
@@ -110,13 +105,7 @@ public class MainActivity extends AppCompatActivity {
         public void onClick(View v) {
             switch (v.getId()) {
                 case R.id.btnNewGame:
-                    sudokuGeneratorThread = new NewGameThread(selectedDifficulty, sudokuGenerator);
-                    sudokuGeneratorThread.start();
-                    while (sudokuGeneratorThread.isAlive()) {
-                        Log.d(TAG, "onClick: WAITING");
-                    }
-                    puzzle = sudokuGenerator.getPuzzle();
-                    newGameAction();
+                    sudokuGenerator.puzzleGenerator(selectedDifficulty);
                     break;
 
                 case R.id.imgbtnArrowLeft:
@@ -138,23 +127,6 @@ public class MainActivity extends AppCompatActivity {
             }
         }
 
-        private void newGameAction() {
-            SudokuPuzzle sudokuPuzzle = new SudokuPuzzle(selectedDifficulty, puzzle);
-            int diff = sudokuPuzzle.getDifficulty();
-            System.out.println(diff);
-            ArrayList<Cell> cellArrayList = new ArrayList<>();
-            Cell cell;
-            for (int row = 0; row < 9; row++) {
-                for (int col = 0; col < 9; col++) {
-                    cell = new Cell(row, col, puzzle[row][col]);
-                    cellArrayList.add(cell);
-                }
-            }
-            board = new Board(cellArrayList);
-            board.printBoard();
-            Intent gameIntent = new Intent(MainActivity.this, GameActivity.class);
-            startActivity(gameIntent);
-        }
     }
 
 }
