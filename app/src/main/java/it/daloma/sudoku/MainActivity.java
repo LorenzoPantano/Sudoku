@@ -3,10 +3,12 @@ package it.daloma.sudoku;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.res.ResourcesCompat;
+import androidx.preference.PreferenceManager;
 
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -20,6 +22,7 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextSwitcher;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.ViewSwitcher;
 
 import it.daloma.sudoku.utils.LoadingDialog;
@@ -86,6 +89,9 @@ public class MainActivity extends AppCompatActivity {
         textSwitcherDifficulty.setInAnimation(inAnimation);
         textSwitcherDifficulty.setOutAnimation(outAnimation);
 
+        //Load Settings
+        PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
+
         //SudokuGenerator
         sudokuGenerator = new SudokuGenerator(this);
         loadingDialog = new LoadingDialog(MainActivity.this);
@@ -124,6 +130,10 @@ public class MainActivity extends AppCompatActivity {
                 case R.id.imgbtnStats:
                     Intent statsIntent = new Intent(MainActivity.this, StatsActivity.class);
                     startActivity(statsIntent);
+
+                case R.id.imgbtnSettings:
+                    Intent settingsIntent = new Intent(MainActivity.this, SettingsActivity.class);
+                    startActivity(settingsIntent);
             }
         }
 

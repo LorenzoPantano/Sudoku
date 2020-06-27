@@ -1,6 +1,7 @@
 package it.daloma.sudoku.view;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -12,17 +13,24 @@ import android.view.View;
 
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
+import androidx.preference.PreferenceManager;
 
 import java.util.ArrayList;
 
+import it.daloma.sudoku.GameActivity;
 import it.daloma.sudoku.R;
+import it.daloma.sudoku.SettingsActivity;
 import it.daloma.sudoku.models.Board;
 import it.daloma.sudoku.models.Cell;
 import it.daloma.sudoku.models.SudokuModel;
 
 public class SudokuBoardView extends View {
 
+    SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
+
+
     private static final String TAG = "SUDOKUVIEWGRID";
+    private boolean highlightSettings = sharedPreferences.getBoolean(SettingsActivity.HIGHLIGHT_SELECTED, true);
 
     //Paints
     private Paint thinPaint;
@@ -101,6 +109,9 @@ public class SudokuBoardView extends View {
         width = getResources().getDisplayMetrics().widthPixels;  //Dim. assoluta dello schermo
         height = getResources().getDisplayMetrics().heightPixels;
         cellSizePixels = (float) ((width - 2*padding)/ SIZE);
+
+        //Settings
+        //From shared preferences
 
     }
 
@@ -212,7 +223,7 @@ public class SudokuBoardView extends View {
     }
 
     protected void fillCell(Canvas canvas, int row, int col, Paint paint) {
-        canvas.drawRect(col*cellSizePixels + padding, row*cellSizePixels + padding,
+        if (highlightSettings) canvas.drawRect(col*cellSizePixels + padding, row*cellSizePixels + padding,
                 (col + 1)*cellSizePixels + padding + thinPaint.getStrokeWidth(), (row + 1)*cellSizePixels + padding + thinPaint.getStrokeWidth(), paint);
     }
 

@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Chronometer;
 import android.widget.GridLayout;
 import android.widget.Toast;
 
@@ -17,6 +18,8 @@ import it.daloma.sudoku.view.SudokuBoardView;
 
 
 public class GameActivity extends AppCompatActivity {
+
+    Chronometer chronometer;
 
     //Controls Buttons
     Button[] buttons = new Button[10];
@@ -69,11 +72,22 @@ public class GameActivity extends AppCompatActivity {
             buttons[i].setLayoutParams(params);
         }
 
+        //Chronometer setup
+        chronometer = findViewById(R.id.chronometer);
+        chronometer.start();
+        //Chronometer.setBase() può essere usato per impostare un tempo di partenza
+        //da salvare dall'ultima partita
+
     }
 
     @Override
     protected void onPause() {
         super.onPause();
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
     }
 
     private class NumbersOnClickListener implements View.OnClickListener {

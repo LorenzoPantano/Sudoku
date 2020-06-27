@@ -35,9 +35,7 @@
 
     <!-- Preference Titles -->
     <string name="general">General</string>
-    <string name="theme">Theme</string>
-
-    <!-- Notifications Preferences -->
+    <string name="gameSettings">Game Settings</string>
 
 
 </resources>

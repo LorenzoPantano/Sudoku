@@ -24,5 +24,23 @@
         <item name="android:background">@color/transparent</item>
     </style>
 
+    <!-- Settings -->
+    <style name="PreferenceScreen" parent="Theme.AppCompat.NoActionBar">
+        <item name="colorPrimary">@color/pantone_classic_blue</item>
+        <item name="colorPrimaryDark">@color/pantone_classic_blue</item>
+        <item name="colorAccent">@color/pantone_classic_blue_75opacity</item>
+        <item name="android:colorPrimary">@color/pantone_classic_blue</item>
+        <item name="android:colorPrimaryDark">@color/pantone_classic_blue</item>
+        <item name="android:colorAccent">@color/pantone_classic_blue</item>
+        <item name="android:colorBackground">@color/background_black</item>
+        <item name="android:textColorPrimary">@color/pantone_classic_blue</item>
+        <item name="android:textColor">@color/pantone_classic_blue</item>
+        <item name="android:textColorPrimaryInverse">@color/background_black</item>
+        <item name="android:colorButtonNormal">@color/pantone_classic_blue</item>
+        <item name="android:titleTextColor">@color/pantone_classic_blue</item>
+        <item name="fontFamily">@font/raleway_semibold</item>
+        <item name="android:textColorSecondary">@color/pantone_classic_blue_75opacity</item>
+        <item name="android:colorControlActivated">@color/pantone_classic_blue</item>
+    </style>
 
 </resources>
