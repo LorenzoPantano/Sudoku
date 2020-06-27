@@ -8,7 +8,7 @@ import java.util.ArrayList;
 public class Board implements Parcelable {
 
     private static final int SIZE = 9;
-    private ArrayList<Cell> cellList = new ArrayList<>();
+    private ArrayList<Cell> cellList;
 
     public Board(ArrayList<Cell> cellList) {
         this.cellList = cellList;
@@ -24,7 +24,7 @@ public class Board implements Parcelable {
 
     public void printBoard () {
         for (Cell cell: cellList) {
-            System.out.println("Cell " + cell.getRow() + ":" + cell.getCol() + " VALUE: " + cell.getValue());
+            System.out.println("Cell " + cell.getRow() + ":" + cell.getCol() + " VALUE: " + cell.getValue() + " STARTING CELL: " + cell.isStartingCell());
         }
     }
 
@@ -35,6 +35,10 @@ public class Board implements Parcelable {
         } else {
             cellList = null;
         }
+    }
+
+    public Cell getCell(int index) {
+        return cellList.get(index);
     }
 
     @Override

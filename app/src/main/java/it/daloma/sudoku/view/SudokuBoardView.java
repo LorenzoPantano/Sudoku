@@ -30,6 +30,7 @@ public class SudokuBoardView extends View {
     private Paint selectedRowColPaint;
     private Paint selectedCellPaint;
     private Paint textPaint;
+    private Paint textPaintHighlighted;
 
     //Values
     private static int width;
@@ -86,10 +87,15 @@ public class SudokuBoardView extends View {
         selectedCellPaint.setColor(ContextCompat.getColor(getContext(), R.color.pantone_classic_blue));
         selectedCellPaint.setStyle(Paint.Style.FILL);
 
-        //Paint per numeri
+        //Paint per numeri non evidenziati
         textPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         textPaint.setTextSize(50);
         textPaint.setColor(Color.BLACK);
+
+        //Paint per numeri evidenziati
+        textPaintHighlighted = new Paint(Paint.ANTI_ALIAS_FLAG);
+        textPaintHighlighted.setTextSize(50);
+        textPaintHighlighted.setColor(Color.WHITE);
 
         //Dimensioni della griglia e delle celle
         width = getResources().getDisplayMetrics().widthPixels;  //Dim. assoluta dello schermo
@@ -119,6 +125,7 @@ public class SudokuBoardView extends View {
             drawInitialBoard(canvas, sudokuModel.getBoard());
         }
         fillCells(canvas, sudokuModel.getSelectedRow(), sudokuModel.getSelectedCol());
+        fillCellWithInput(canvas,sudokuModel.getBoard());
     }
 
     public void cleanCells() {
@@ -161,8 +168,27 @@ public class SudokuBoardView extends View {
             float textWidth = textPaint.measureText(valueText);
             float textHeight = textBounds.height();
 
-            canvas.drawText((value == 0 ? "" : valueText), (row * cellSizePixels + cellSizePixels/2 - textWidth/2 + padding),
-                    (col*cellSizePixels + cellSizePixels/2 + thickPaint.getStrokeWidth() + padding), textPaint);
+            canvas.drawText((value == 0 ? "" : valueText), (col* cellSizePixels + cellSizePixels/2 - textWidth/2 + padding),
+                    (row*cellSizePixels + cellSizePixels/2 + thickPaint.getStrokeWidth() + padding), textPaint);
+        }
+    }
+
+    public void fillCellWithInput(Canvas canvas, Board board) {
+
+        if (sudokuModel.getSelectedCol() == -1 || sudokuModel.getSelectedRow() == -1) return;
+        for (Cell cell: board.getCellList()) {
+            int value = cell.getValue();
+            String valueText = Integer.toString(value);
+            int row = cell.getRow();
+            int col = cell.getCol();
+
+            Rect textBounds = new Rect();
+            textPaint.getTextBounds(valueText, 0, valueText.length(), textBounds);
+            float textWidth = textPaint.measureText(valueText);
+            float textHeight = textBounds.height();
+            boolean selectedCell = (row == sudokuModel.getSelectedRow() && col == sudokuModel.getSelectedCol());
+            canvas.drawText((value == 0 ? "" : valueText), (col*cellSizePixels + cellSizePixels/2 - textWidth/2 + padding),
+                    (row*cellSizePixels + cellSizePixels/2 + thickPaint.getStrokeWidth() + padding), selectedCell ? textPaintHighlighted : textPaint);
         }
     }
 
@@ -171,12 +197,18 @@ public class SudokuBoardView extends View {
         for (int row = 0; row < SIZE; row++) {
             for (int col = 0; col < SIZE; col++) {
                 if (row == selectedRow && col == selectedCol) {
-                    fillCell(canvas, row, col, selectedCellPaint);
+                    highlightCell(canvas, row, col, selectedCellPaint);
                 } else if (row == selectedRow || col == selectedCol) {
                     fillCell(canvas, row, col, selectedRowColPaint);
                 }
             }
         }
+    }
+
+    private void highlightCell(Canvas canvas, int row, int col, Paint selectedCellPaint) {
+        canvas.drawCircle(col*cellSizePixels + cellSizePixels/2 + padding, row*cellSizePixels +cellSizePixels/2 + padding,
+                cellSizePixels/2 + thickPaint.getStrokeWidth(), selectedCellPaint);
+
     }
 
     protected void fillCell(Canvas canvas, int row, int col, Paint paint) {

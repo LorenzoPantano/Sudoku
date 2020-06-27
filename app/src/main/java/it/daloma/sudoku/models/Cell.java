@@ -8,27 +8,21 @@ public class Cell implements Parcelable {
     private int row;
     private int col;
     private int value;
+    private int isStartingCell;
 
-    public Cell(int row, int col, int value) {
+    public Cell(int row, int col, int value, int isStartingCell) {
         this.row = row;
         this.col = col;
         this.value = value;
+        this.isStartingCell = isStartingCell;
     }
 
     public int getRow() {
         return row;
     }
 
-    public void setRow(int row) {
-        this.row = row;
-    }
-
     public int getCol() {
         return col;
-    }
-
-    public void setCol(int col) {
-        this.col = col;
     }
 
     public int getValue() {
@@ -39,10 +33,16 @@ public class Cell implements Parcelable {
         this.value = value;
     }
 
+    public boolean isStartingCell() {
+        if (isStartingCell == 1) return true;
+        else return false;
+    }
+
     protected Cell(Parcel in) {
         row = in.readInt();
         col = in.readInt();
         value = in.readInt();
+        isStartingCell = in.readInt();
     }
 
     @Override
@@ -55,6 +55,7 @@ public class Cell implements Parcelable {
         dest.writeInt(row);
         dest.writeInt(col);
         dest.writeInt(value);
+        dest.writeInt(isStartingCell);
     }
 
     @SuppressWarnings("unused")

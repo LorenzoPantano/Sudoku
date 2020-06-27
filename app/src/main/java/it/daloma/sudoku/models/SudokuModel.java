@@ -24,6 +24,10 @@ public class SudokuModel {
         return isNewGame;
     }
 
+    public void setNewGame(boolean newGame) {
+        isNewGame = newGame;
+    }
+
     public int getSelectedRow() {
         return selectedRow;
     }

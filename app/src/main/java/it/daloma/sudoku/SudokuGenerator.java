@@ -19,14 +19,12 @@ Example: https://sugoku.herokuapp.com/board?difficulty=easy
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Bundle;
-import android.os.Parcelable;
+import android.util.Log;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 
@@ -34,7 +32,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 
 import it.daloma.sudoku.models.Board;
@@ -44,6 +41,7 @@ import it.daloma.sudoku.utils.NewGameErrorDialog;
 
 public class SudokuGenerator implements Response.ErrorListener, Response.Listener<JSONObject> {
 
+    private static final String TAG = "SUDOKU_GENERATOR";
     private String url = "https://sugoku.herokuapp.com/board?difficulty=";
     public int[][] puzzle = new int[9][9];
     ArrayList<Cell> generatedPuzzleCells = new ArrayList<>();
@@ -118,8 +116,13 @@ public class SudokuGenerator implements Response.ErrorListener, Response.Listene
                 JSONArray box = board.getJSONArray(i);
                 for (int j = 0; j < box.length(); j++) {
                     int k = box.getInt(j);
-                    puzzle[i][j] = k;
-                    Cell cell = new Cell(i, j, k);
+                    Cell cell;
+                    if (k == 0) {
+                        cell = new Cell(i, j, k, 0);
+                    } else {
+                        cell = new Cell(i, j, k, 1);
+                    }
+                    Log.d(TAG, "onResponse: GENERATED CELL: " + i +" "+j+" : "+k+" "+cell.isStartingCell());
                     generatedPuzzleCells.add(cell);
                 }
             }
@@ -128,6 +131,7 @@ public class SudokuGenerator implements Response.ErrorListener, Response.Listene
         }
 
         Board generatedBoard = new Board(generatedPuzzleCells);
+        generatedBoard.printBoard();
         loadingDialog.dismissDialog();
         Intent gameIntent = new Intent(context, GameActivity.class);
         gameIntent.putExtra("Board", generatedBoard);
