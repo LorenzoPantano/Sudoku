@@ -1,4 +1,4 @@
-package it.daloma.sudoku.view;
+package it.daloma.sudoku.views;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -6,6 +6,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
+import android.graphics.Typeface;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -15,9 +16,6 @@ import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.preference.PreferenceManager;
 
-import java.util.ArrayList;
-
-import it.daloma.sudoku.GameActivity;
 import it.daloma.sudoku.R;
 import it.daloma.sudoku.SettingsActivity;
 import it.daloma.sudoku.models.Board;
@@ -39,6 +37,7 @@ public class SudokuBoardView extends View {
     private Paint selectedCellPaint;
     private Paint textPaint;
     private Paint textPaintHighlighted;
+    private Paint textPaintStarting;
 
     //Values
     private static int width;
@@ -105,6 +104,13 @@ public class SudokuBoardView extends View {
         textPaintHighlighted.setTextSize(50);
         textPaintHighlighted.setColor(Color.WHITE);
 
+        //Paint per board iniziale
+        textPaintStarting = new Paint(Paint.ANTI_ALIAS_FLAG);
+        textPaintStarting.setTextSize(50);
+        textPaintStarting.setColor(Color.BLACK);
+        Typeface typeface = Typeface.create("raleway_black", Typeface.BOLD);
+        textPaintStarting.setTypeface(typeface);
+
         //Dimensioni della griglia e delle celle
         width = getResources().getDisplayMetrics().widthPixels;  //Dim. assoluta dello schermo
         height = getResources().getDisplayMetrics().heightPixels;
@@ -132,9 +138,7 @@ public class SudokuBoardView extends View {
         canvas.drawRoundRect(padding,padding, width - padding, width - padding, 20, 20, thickPaint);
         //Cells
         drawLines(canvas);
-        if (sudokuModel.isNewGame()) {
-            drawInitialBoard(canvas, sudokuModel.getBoard());
-        }
+        drawInitialBoard(canvas, sudokuModel.getBoard());
         fillCells(canvas, sudokuModel.getSelectedRow(), sudokuModel.getSelectedCol());
         fillCellWithInput(canvas,sudokuModel.getBoard());
     }
@@ -173,6 +177,7 @@ public class SudokuBoardView extends View {
             String valueText = Integer.toString(value);
             int row = cell.getRow();
             int col = cell.getCol();
+            boolean isStartingCell = cell.isStartingCell();
 
             Rect textBounds = new Rect();
             textPaint.getTextBounds(valueText, 0, valueText.length(), textBounds);
@@ -180,7 +185,7 @@ public class SudokuBoardView extends View {
             float textHeight = textBounds.height();
 
             canvas.drawText((value == 0 ? "" : valueText), (col* cellSizePixels + cellSizePixels/2 - textWidth/2 + padding),
-                    (row*cellSizePixels + cellSizePixels/2 + thickPaint.getStrokeWidth() + padding), textPaint);
+                    (row*cellSizePixels + cellSizePixels/2 + thickPaint.getStrokeWidth() + padding), isStartingCell ? textPaintStarting : textPaint);
         }
     }
 

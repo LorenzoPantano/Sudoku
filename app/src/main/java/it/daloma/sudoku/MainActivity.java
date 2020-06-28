@@ -25,6 +25,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ViewSwitcher;
 
+import com.google.gson.Gson;
+
+import java.time.LocalTime;
+
+import it.daloma.sudoku.models.Board;
 import it.daloma.sudoku.utils.LoadingDialog;
 
 public class MainActivity extends AppCompatActivity {
@@ -34,15 +39,26 @@ public class MainActivity extends AppCompatActivity {
     private Button btnNewGame, btnResume;
     private TextSwitcher textSwitcherDifficulty;
     private static final String[] difficulties = {"Easy", "Medium", "Hard"};
-    public int[][] puzzle = new int[9][9];
     private int selectedDifficulty = 0;  //Potrebbe essere preso da SharedPreferences salvando l'ultima partita
     private SudokuGenerator sudokuGenerator;
     private LoadingDialog loadingDialog;
+    SharedPreferences sharedPreferencesEasy;
+    SharedPreferences sharedPreferencesMedium;
+    SharedPreferences sharedPreferencesHard;
+    SharedPreferences sharedPreferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        //Load Settings
+        PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
+        //Load shared prefs
+        sharedPreferencesEasy = getSharedPreferences("Game_EASY", MODE_PRIVATE);
+        sharedPreferencesMedium = getSharedPreferences("Game_MEDIUM", MODE_PRIVATE);
+        sharedPreferencesHard = getSharedPreferences("Game_HARD", MODE_PRIVATE);
+        selectSharedPrefs();
 
         //Buttons
         MainActivityButtonsListener mainActivityButtonsListener = new MainActivityButtonsListener();
@@ -67,6 +83,12 @@ public class MainActivity extends AppCompatActivity {
         btnResume = findViewById(R.id.btnResume);
         btnResume.setOnClickListener(mainActivityButtonsListener);
 
+        if (sharedPreferences.getInt("difficulty", -1) == -1) {
+            makeInvisibleButton(btnResume);
+        } else {
+            makeVisibleButton(btnResume);
+        }
+
         //Difficulty
         textSwitcherDifficulty = findViewById(R.id.textSwitcherDifficulty);
         textSwitcherDifficulty.setFactory(new ViewSwitcher.ViewFactory() {
@@ -89,12 +111,43 @@ public class MainActivity extends AppCompatActivity {
         textSwitcherDifficulty.setInAnimation(inAnimation);
         textSwitcherDifficulty.setOutAnimation(outAnimation);
 
-        //Load Settings
-        PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
-
         //SudokuGenerator
-        sudokuGenerator = new SudokuGenerator(this);
         loadingDialog = new LoadingDialog(MainActivity.this);
+        sudokuGenerator = new SudokuGenerator(MainActivity.this);
+    }
+
+    private void selectSharedPrefs() {
+        switch (selectedDifficulty) {
+            case 0:
+                sharedPreferences = sharedPreferencesEasy;
+                break;
+            case 1:
+                sharedPreferences = sharedPreferencesMedium;
+                break;
+            case 2:
+                sharedPreferences = sharedPreferencesHard;
+                break;
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (sharedPreferences.getInt("difficulty", -1) == -1) {
+            makeInvisibleButton(btnResume);
+        } else {
+            makeVisibleButton(btnResume);
+        }
+    }
+
+    private void makeInvisibleButton(Button button) {
+        button.setVisibility(View.INVISIBLE);
+        button.setClickable(false);
+    }
+
+    private void makeVisibleButton(Button button) {
+        button.setVisibility(View.VISIBLE);
+        button.setClickable(true);
     }
 
     private boolean isNetworkAvailable() {
@@ -114,26 +167,52 @@ public class MainActivity extends AppCompatActivity {
                     sudokuGenerator.puzzleGenerator(selectedDifficulty);
                     break;
 
+                case R.id.btnResume:
+                    Intent gameIntent = new Intent(MainActivity.this, GameActivity.class);
+                    Gson gson = new Gson();
+                    String boardFromSharedPrefs = sharedPreferences.getString("saved_board", "DEFAULT");
+                    Log.d(TAG, "onClick: FROM SHARED PREFS " + boardFromSharedPrefs);
+                    Board board = gson.fromJson(boardFromSharedPrefs, Board.class);
+                    gameIntent.putExtra("Board", board);
+                    gameIntent.putExtra("new_game", false);
+                    gameIntent.putExtra("difficulty", selectedDifficulty);
+                    startActivity(gameIntent);
+                    break;
+
                 case R.id.imgbtnArrowLeft:
                     selectedDifficulty  = (selectedDifficulty - 1) % 3;
                     if (selectedDifficulty == -1) selectedDifficulty = 2;
                     textSwitcherDifficulty.setText(difficulties[selectedDifficulty]);
+                    selectSharedPrefs();
+                    if (sharedPreferences.getInt("difficulty", -1) == -1) {
+                        makeInvisibleButton(btnResume);
+                    } else {
+                        makeVisibleButton(btnResume);
+                    }
                     Log.d(TAG, "SELECTED DIFFICULTY: " + selectedDifficulty);
                     break;
 
                 case R.id.imgbtnArrowRight:
                     selectedDifficulty  = (selectedDifficulty + 1) % 3;
                     textSwitcherDifficulty.setText(difficulties[selectedDifficulty]);
+                    selectSharedPrefs();
+                    if (sharedPreferences.getInt("difficulty", -1) == -1) {
+                        makeInvisibleButton(btnResume);
+                    } else {
+                        makeVisibleButton(btnResume);
+                    }
                     Log.d(TAG, "SELECTED DIFFICULTY: " + selectedDifficulty);
                     break;
 
                 case R.id.imgbtnStats:
                     Intent statsIntent = new Intent(MainActivity.this, StatsActivity.class);
                     startActivity(statsIntent);
+                    break;
 
                 case R.id.imgbtnSettings:
                     Intent settingsIntent = new Intent(MainActivity.this, SettingsActivity.class);
                     startActivity(settingsIntent);
+                    break;
             }
         }
 

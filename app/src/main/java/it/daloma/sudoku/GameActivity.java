@@ -3,24 +3,28 @@ package it.daloma.sudoku;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Chronometer;
 import android.widget.GridLayout;
-import android.widget.Toast;
+import android.widget.TextView;
+
+import com.google.gson.Gson;
 
 import it.daloma.sudoku.models.Board;
 import it.daloma.sudoku.models.Cell;
 import it.daloma.sudoku.models.SudokuModel;
-import it.daloma.sudoku.view.SudokuBoardView;
+import it.daloma.sudoku.views.PausableChronometer;
+import it.daloma.sudoku.views.SudokuBoardView;
 
 
 public class GameActivity extends AppCompatActivity {
 
-    Chronometer chronometer;
-
+    private static final String TAG = "GAME_ACTIVITY";
+    PausableChronometer chronometer;
     //Controls Buttons
     Button[] buttons = new Button[10];
     private static final int[] BUTTON_IDS = {
@@ -40,6 +44,11 @@ public class GameActivity extends AppCompatActivity {
     private Board board;
     private SudokuModel sudokuModel;
     private SudokuBoardView sudokuBoardView;
+    private int difficulty;
+    SharedPreferences sharedPreferences;
+    SharedPreferences.Editor editor;
+    private TextView tvDifficultyGame;
+    private String difficultyString = "Null";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,7 +68,34 @@ public class GameActivity extends AppCompatActivity {
             sudokuModel.getBoard().printBoard();
             sudokuBoardView = findViewById(R.id.sudokuView);
             sudokuBoardView.setSudokuModel(sudokuModel);
+            difficulty = gameIntent.getIntExtra("difficulty", -1);
+        } else {
+            board = gameIntent.getParcelableExtra("Board");
+            sudokuModel = new SudokuModel(board, isNewGame);
+            sudokuModel.getBoard().printBoard();
+            sudokuBoardView = findViewById(R.id.sudokuView);
+            sudokuBoardView.setSudokuModel(sudokuModel);
+            difficulty = gameIntent.getIntExtra("difficulty", -1);
         }
+
+        //Difficulty TextView
+        switch (difficulty) {
+            case 0:
+                //Shared Preferences
+                sharedPreferences = getSharedPreferences("Game_EASY", MODE_PRIVATE);
+                difficultyString = "Easy";
+                break;
+            case 1:
+                difficultyString = "Medium";
+                sharedPreferences = getSharedPreferences("Game_MEDIUM", MODE_PRIVATE);
+                break;
+            case 2:
+                difficultyString = "Hard";
+                sharedPreferences = getSharedPreferences("Game_HARD", MODE_PRIVATE);
+                break;
+        }
+        tvDifficultyGame = findViewById(R.id.tvDifficultyGame);
+        tvDifficultyGame.setText(difficultyString);
 
         //Controls Setup
         numbersOnClickListener = new NumbersOnClickListener();
@@ -75,20 +111,41 @@ public class GameActivity extends AppCompatActivity {
         //Chronometer setup
         chronometer = findViewById(R.id.chronometer);
         chronometer.start();
+
         //Chronometer.setBase() può essere usato per impostare un tempo di partenza
         //da salvare dall'ultima partita
+
 
     }
 
     @Override
     protected void onPause() {
+        //Save board
+        saveState(board);
         super.onPause();
     }
 
     @Override
     public void onBackPressed() {
+        //Save board
+        saveState(board);
         super.onBackPressed();
     }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+    }
+
+    public void saveState(Board board) {
+        editor = sharedPreferences.edit();
+        Gson gson = new Gson();
+        editor.putString("saved_board", gson.toJson(board));
+        editor.putInt("difficulty", difficulty);
+        Log.d(TAG, "saveState: TIME: " + chronometer.getCurrentTime());
+        editor.apply();
+    }
+
 
     private class NumbersOnClickListener implements View.OnClickListener {
 

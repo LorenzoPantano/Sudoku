@@ -49,6 +49,7 @@ public class SudokuGenerator implements Response.ErrorListener, Response.Listene
     private Context context;
     LoadingDialog loadingDialog;
     NewGameErrorDialog newGameErrorDialog;
+    private int difficultyForIntent = -1;
 
     public SudokuGenerator(Context context) {
         requestQueue = Volley.newRequestQueue(context);
@@ -65,16 +66,19 @@ public class SudokuGenerator implements Response.ErrorListener, Response.Listene
         this.puzzle = puzzle;
     }
 
-    public void setDifficulty(int difficulty) {
+    private void setDifficulty(int difficulty) {
         switch (difficulty){
             case Globals.EASY:
                 url = url.concat("easy");
+                difficultyForIntent = Globals.EASY;
                 break;
             case Globals.MEDIUM:
                 url = url.concat("medium");
+                difficultyForIntent = Globals.MEDIUM;
                 break;
             case Globals.HARD:
                 url = url.concat("hard");
+                difficultyForIntent = Globals.HARD;
                 break;
             default:
                 url = url.concat("random");
@@ -112,6 +116,7 @@ public class SudokuGenerator implements Response.ErrorListener, Response.Listene
         try {
             JSONArray board = response.getJSONArray("board");
             System.out.println("Board " + board);
+            generatedPuzzleCells = new ArrayList<>();
             for (int i = 0; i < board.length(); i++) {
                 JSONArray box = board.getJSONArray(i);
                 for (int j = 0; j < box.length(); j++) {
@@ -136,6 +141,7 @@ public class SudokuGenerator implements Response.ErrorListener, Response.Listene
         Intent gameIntent = new Intent(context, GameActivity.class);
         gameIntent.putExtra("Board", generatedBoard);
         gameIntent.putExtra("new game",true);
+        gameIntent.putExtra("difficulty", difficultyForIntent);
         context.startActivity(gameIntent);
     }
 }
