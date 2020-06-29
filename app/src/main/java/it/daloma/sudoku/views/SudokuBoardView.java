@@ -38,6 +38,8 @@ public class SudokuBoardView extends View {
     private Paint textPaint;
     private Paint textPaintHighlighted;
     private Paint textPaintStarting;
+    private Paint textAnnotationPaint;
+    private Paint textAnnotationPaintHighlighted;
 
     //Values
     private static int width;
@@ -111,13 +113,20 @@ public class SudokuBoardView extends View {
         Typeface typeface = Typeface.create("raleway_black", Typeface.BOLD);
         textPaintStarting.setTypeface(typeface);
 
+        //Paint per appunti
+        textAnnotationPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        textAnnotationPaint.setTextSize(20);
+        textAnnotationPaint.setColor(Color.BLACK);
+
+        //Paint per appunti selezionati
+        textAnnotationPaintHighlighted = new Paint(Paint.ANTI_ALIAS_FLAG);
+        textAnnotationPaintHighlighted.setTextSize(20);
+        textAnnotationPaintHighlighted.setColor(Color.WHITE);
+
         //Dimensioni della griglia e delle celle
         width = getResources().getDisplayMetrics().widthPixels;  //Dim. assoluta dello schermo
         height = getResources().getDisplayMetrics().heightPixels;
         cellSizePixels = (float) ((width - 2*padding)/ SIZE);
-
-        //Settings
-        //From shared preferences
 
     }
 
@@ -138,13 +147,58 @@ public class SudokuBoardView extends View {
         canvas.drawRoundRect(padding,padding, width - padding, width - padding, 20, 20, thickPaint);
         //Cells
         drawLines(canvas);
-        drawInitialBoard(canvas, sudokuModel.getBoard());
+        Board board = sudokuModel.getBoard();
+        drawInitialBoard(canvas, board);
         fillCells(canvas, sudokuModel.getSelectedRow(), sudokuModel.getSelectedCol());
-        fillCellWithInput(canvas,sudokuModel.getBoard());
+        fillCellWithInput(canvas, board);
+        fillCellsWithAnnotations(canvas, board);
     }
 
-    public void cleanCells() {
-        invalidate();
+    private void fillCellsWithAnnotations(Canvas canvas, Board board) {
+
+        for (Cell cell : board.getCellList()) {
+            if (!cell.getAnnotations().isEmpty()) {
+                //Se la lista degli appunti non è vuota
+                int row = cell.getRow();
+                int col = cell.getCol();
+
+                for (int annotation : cell.getAnnotations()) {
+
+                    String annotationText = Integer.toString(annotation);
+
+                    Rect textBounds = new Rect();
+                    textAnnotationPaint.getTextBounds(annotationText, 0, annotationText.length(), textBounds);
+                    float textWidth = textPaint.measureText(annotationText);
+                    float textHeight = textBounds.height();
+
+                    boolean selectedCell = (row == sudokuModel.getSelectedRow() && col == sudokuModel.getSelectedCol());
+
+                    switch (cell.getAnnotationIndex(annotation)) {
+                        case 0:
+                            //TOP LEFT
+                            canvas.drawText(annotationText, (col* cellSizePixels + cellSizePixels/3 - textWidth/2 + padding),
+                                    (row*cellSizePixels + cellSizePixels/3 - textHeight/2 + thickPaint.getStrokeWidth() + padding),
+                                    selectedCell ? textAnnotationPaintHighlighted : textAnnotationPaint);
+                            break;
+
+                        case 1:
+                            //TOP CENTER
+                            canvas.drawText(annotationText, (col* cellSizePixels + cellSizePixels/2 + thickPaint.getStrokeWidth() - textWidth/2 + padding),
+                                    (row*cellSizePixels + cellSizePixels/3 -textHeight/2 + thickPaint.getStrokeWidth() + padding),
+                                    selectedCell ? textAnnotationPaintHighlighted : textAnnotationPaint);
+                            break;
+
+                        case 2:
+                            //TOP RIGHT
+                            canvas.drawText(annotationText, (col* cellSizePixels + cellSizePixels - cellSizePixels/3 + thickPaint.getStrokeWidth() - textWidth/2 + padding),
+                                    (row*cellSizePixels + cellSizePixels/3 - textHeight/2 + thickPaint.getStrokeWidth() + padding),
+                                    selectedCell ? textAnnotationPaintHighlighted : textAnnotationPaint);
+
+                    }
+                }
+            }
+
+        }
     }
 
     protected void drawLines(Canvas canvas){

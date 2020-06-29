@@ -4,12 +4,15 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.ColorStateList;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Chronometer;
 import android.widget.GridLayout;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
@@ -40,7 +43,10 @@ public class GameActivity extends AppCompatActivity {
             R.id.buttonCancel
     };
 
+    ImageButton imgbtnEdit, imgbtnRestart, imgbtnHint, imgbtnUndo;
+
     NumbersOnClickListener numbersOnClickListener;
+    ActionOnClickListener actionOnClickListener;
     private Board board;
     private SudokuModel sudokuModel;
     private SudokuBoardView sudokuBoardView;
@@ -49,6 +55,7 @@ public class GameActivity extends AppCompatActivity {
     SharedPreferences.Editor editor;
     private TextView tvDifficultyGame;
     private String difficultyString = "Null";
+    private boolean editing = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -108,6 +115,16 @@ public class GameActivity extends AppCompatActivity {
             buttons[i].setLayoutParams(params);
         }
 
+        actionOnClickListener = new ActionOnClickListener();
+        imgbtnEdit = findViewById(R.id.imgbtnEdit);
+        imgbtnHint = findViewById(R.id.imgbtnHint);
+        imgbtnRestart = findViewById(R.id.imgbtnRestart);
+        imgbtnUndo = findViewById(R.id.imgbtnUndo);
+        imgbtnEdit.setOnClickListener(actionOnClickListener);
+        imgbtnUndo.setOnClickListener(actionOnClickListener);
+        imgbtnRestart.setOnClickListener(actionOnClickListener);
+        imgbtnHint.setOnClickListener(actionOnClickListener);
+
         //Chronometer setup
         chronometer = findViewById(R.id.chronometer);
         chronometer.start();
@@ -142,7 +159,7 @@ public class GameActivity extends AppCompatActivity {
         Gson gson = new Gson();
         editor.putString("saved_board", gson.toJson(board));
         editor.putInt("difficulty", difficulty);
-        Log.d(TAG, "saveState: TIME: " + chronometer.getCurrentTime());
+        chronometer.stop();
         editor.apply();
     }
 
@@ -169,127 +186,125 @@ public class GameActivity extends AppCompatActivity {
                 case R.id.button1:
                     Log.w(TAG, "BUTTON 1 PRESSED");
                     selectedCell = board.getCell(index);
-                    if (selectedCell.isStartingCell()) {
-                        Log.d(TAG, "onClick: CAN'T EDIT STARTING CELL");
-                        break;
-                    }
-                    else {
-                        selectedCell.setValue(1);
-                        Log.d(TAG, "onClick: NEW VALUE : " + selectedCell.getValue());
-                        sudokuBoardView.postInvalidate();
-                        break;
-                    }
+                    handleInput(rowClicked, colClicked, selectedCell, 1);
+                    break;
 
                 case R.id.button2:
                     Log.w(TAG, "BUTTON 2 PRESSED");
                     selectedCell = board.getCell(index);
-                    if (selectedCell.isStartingCell()) {
-                        Log.d(TAG, "onClick: CAN'T EDIT STARTING CELL");
-                        break;
-                    }
-                    selectedCell.setValue(2);
-                    Log.d(TAG, "onClick: NEW VALUE : " + selectedCell.getValue());
-                    sudokuBoardView.postInvalidate();
+                    handleInput(rowClicked, colClicked, selectedCell, 2);
                     break;
 
                 case R.id.button3:
                     Log.w(TAG, "BUTTON 3 PRESSED");
                     selectedCell = board.getCell(index);
-                    if (selectedCell.isStartingCell()) {
-                        Log.d(TAG, "onClick: CAN'T EDIT STARTING CELL");
-                        break;
-                    }
-                    selectedCell.setValue(3);
-                    Log.d(TAG, "onClick: NEW VALUE : " + selectedCell.getValue());
-                    sudokuBoardView.postInvalidate();
+                    handleInput(rowClicked, colClicked, selectedCell, 3);
                     break;
 
                 case R.id.button4:
                     Log.w(TAG, "BUTTON 4 PRESSED");
                     selectedCell = board.getCell(index);
-                    if (selectedCell.isStartingCell()) {
-                        Log.d(TAG, "onClick: CAN'T EDIT STARTING CELL");
-                        break;
-                    }
-                    selectedCell.setValue(4);
-                    Log.d(TAG, "onClick: NEW VALUE : " + selectedCell.getValue());
-                    sudokuBoardView.postInvalidate();
+                    handleInput(rowClicked, colClicked, selectedCell, 4);
                     break;
 
                 case R.id.button5:
                     Log.w(TAG, "BUTTON 5 PRESSED");
                     selectedCell = board.getCell(index);
-                    if (selectedCell.isStartingCell()) {
-                        Log.d(TAG, "onClick: CAN'T EDIT STARTING CELL");
-                        break;
-                    }
-                    selectedCell.setValue(5);
-                    Log.d(TAG, "onClick: NEW VALUE : " + selectedCell.getValue());
-                    sudokuBoardView.postInvalidate();
+                    handleInput(rowClicked, colClicked, selectedCell, 5);
                     break;
 
                 case R.id.button6:
                     Log.w(TAG, "BUTTON 6 PRESSED");
                     selectedCell = board.getCell(index);
-                    if (selectedCell.isStartingCell()) {
-                        Log.d(TAG, "onClick: CAN'T EDIT STARTING CELL");
-                        break;
-                    }
-                    selectedCell.setValue(6);
-                    Log.d(TAG, "onClick: NEW VALUE : " + selectedCell.getValue());
-                    sudokuBoardView.postInvalidate();
+                    handleInput(rowClicked, colClicked, selectedCell, 6);
                     break;
 
                 case R.id.button7:
                     Log.w(TAG, "BUTTON 7 PRESSED");
                     selectedCell = board.getCell(index);
-                    if (selectedCell.isStartingCell()) {
-                        Log.d(TAG, "onClick: CAN'T EDIT STARTING CELL");
-                        break;
-                    }
-                    selectedCell.setValue(7);
-                    Log.d(TAG, "onClick: NEW VALUE : " + selectedCell.getValue());
-                    sudokuBoardView.postInvalidate();
+                    handleInput(rowClicked, colClicked, selectedCell, 7);
                     break;
 
                 case R.id.button8:
                     Log.w(TAG, "BUTTON 8 PRESSED");
                     selectedCell = board.getCell(index);
-                    if (selectedCell.isStartingCell()) {
-                        Log.d(TAG, "onClick: CAN'T EDIT STARTING CELL");
-                        break;
-                    }
-                    selectedCell.setValue(8);
-                    Log.d(TAG, "onClick: NEW VALUE : " + selectedCell.getValue());
-                    sudokuBoardView.postInvalidate();
+                    handleInput(rowClicked, colClicked, selectedCell, 8);
                     break;
 
                 case R.id.button9:
                     Log.w(TAG, "BUTTON 9 PRESSED");
                     selectedCell = board.getCell(index);
-                    if (selectedCell.isStartingCell()) {
-                        Log.d(TAG, "onClick: CAN'T EDIT STARTING CELL");
-                        break;
-                    }
-                    selectedCell.setValue(9);
-                    Log.d(TAG, "onClick: NEW VALUE : " + selectedCell.getValue());
-                    sudokuBoardView.postInvalidate();
+                    handleInput(rowClicked, colClicked, selectedCell, 9);
                     break;
 
                 case R.id.buttonCancel:
                     Log.w(TAG, "BUTTON CANCEL PRESSED");
                     selectedCell = board.getCell(index);
-                    if (selectedCell.isStartingCell()) {
-                        Log.d(TAG, "onClick: CAN'T EDIT STARTING CELL");
-                        break;
-                    }
-                    selectedCell.setValue(0);
-                    Log.d(TAG, "onClick: NEW VALUE : " + selectedCell.getValue());
-                    sudokuBoardView.postInvalidate();
+                    handleInput(rowClicked, colClicked, selectedCell, 0);
                     break;
             }
 
         }
+
+        private void handleInput(int rowClicked, int colClicked, Cell selectedCell, int input) {
+            if (!editing) {
+                insertValueInCell(selectedCell, input);
+                return;
+            } else {
+                addAnnotation(rowClicked, colClicked, selectedCell, input);
+                return;
+            }
+        }
+
+        private void addAnnotation(int rowClicked, int colClicked, Cell selectedCell, int value) {
+            if (selectedCell.isStartingCell()) {
+                Log.d(TAG, "addAnnotation: CAN'T EDIT STARTING CELL");
+                return;
+            }
+            selectedCell.addAnnotation(value);
+            selectedCell.setValue(0);
+            Log.d(TAG, "onClick: ADDEDD ANNOTATION AT CELL: " + rowClicked + colClicked + " VALUE: " + selectedCell.getAnnotationIndex(value));
+            sudokuBoardView.postInvalidate();
+            return;
+        }
+
+        private void insertValueInCell(Cell selectedCell, int value) {
+            if (selectedCell.isStartingCell()) {
+                Log.d(TAG, "onClick: CAN'T EDIT STARTING CELL");
+                return;
+            }
+            else {
+                selectedCell.setValue(value);
+                selectedCell.clearAnnotations();
+                Log.d(TAG, "onClick: NEW VALUE : " + selectedCell.getValue());
+                sudokuBoardView.postInvalidate();
+                return;
+            }
+        }
     }
 
+    private class ActionOnClickListener implements View.OnClickListener {
+
+        @Override
+        public void onClick(View v) {
+
+            switch (v.getId()) {
+                case R.id.imgbtnEdit:
+                    Log.d(TAG, "onClick: EDITING");
+                    if (!editing) {
+                        imgbtnEdit.setBackground(getDrawable(R.drawable.action_buttons_pressed));
+                        imgbtnEdit.setImageTintList(ColorStateList.valueOf(getColor(R.color.background_white)));
+                        editing = true;
+                        break;
+                    } else {
+                        imgbtnEdit.setBackground(getDrawable(R.drawable.action_buttons_non_pressed));
+                        imgbtnEdit.setImageTintList(ColorStateList.valueOf(getColor(R.color.pantone_classic_blue)));
+                        editing = false;
+                        break;
+                    }
+
+            }
+
+        }
+    }
 }

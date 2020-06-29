@@ -3,18 +3,22 @@ package it.daloma.sudoku.models;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.util.ArrayList;
+
 public class Cell implements Parcelable {
 
     private int row;
     private int col;
     private int value;
     private int isStartingCell;
+    private ArrayList<Integer> annotations;
 
     public Cell(int row, int col, int value, int isStartingCell) {
         this.row = row;
         this.col = col;
         this.value = value;
         this.isStartingCell = isStartingCell;
+        this.annotations = new ArrayList<>();
     }
 
     public int getRow() {
@@ -33,6 +37,30 @@ public class Cell implements Parcelable {
         this.value = value;
     }
 
+    public void addAnnotation(int value) {
+        if (value == 0) {
+            //CANCEL BUTTON
+            this.annotations.clear();
+            return;
+        }
+        if (this.annotations.contains(value)) return;
+        else this.annotations.add(value);
+    }
+
+    public int getAnnotationIndex(int value) {
+        if (this.annotations.contains(value)) {
+            return this.annotations.indexOf(value);
+        } else return -1;
+    }
+
+    public ArrayList<Integer> getAnnotations() {
+        return this.annotations;
+    }
+
+    public void clearAnnotations(){
+        this.annotations.clear();
+    }
+
     public boolean isStartingCell() {
         if (isStartingCell == 1) return true;
         else return false;
@@ -43,6 +71,12 @@ public class Cell implements Parcelable {
         col = in.readInt();
         value = in.readInt();
         isStartingCell = in.readInt();
+        if (in.readByte() == 0x01) {
+            annotations = new ArrayList<Integer>();
+            in.readList(annotations, Integer.class.getClassLoader());
+        } else {
+            annotations = null;
+        }
     }
 
     @Override
@@ -56,6 +90,12 @@ public class Cell implements Parcelable {
         dest.writeInt(col);
         dest.writeInt(value);
         dest.writeInt(isStartingCell);
+        if (annotations == null) {
+            dest.writeByte((byte) (0x00));
+        } else {
+            dest.writeByte((byte) (0x01));
+            dest.writeList(annotations);
+        }
     }
 
     @SuppressWarnings("unused")
@@ -70,4 +110,6 @@ public class Cell implements Parcelable {
             return new Cell[size];
         }
     };
+
 }
+
