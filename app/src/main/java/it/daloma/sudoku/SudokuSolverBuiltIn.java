@@ -27,16 +27,19 @@ public class SudokuSolverBuiltIn {
         return matrixBoard;
     }
 
-    public boolean solve(int[][] board) {
+    public boolean solve(int [][] board) {
+
+        //TODO: Resolve stackOverflowERROR
+
         for (int row = BOARD_START_INDEX; row < BOARD_SIZE; row++) {
             for (int column = BOARD_START_INDEX; column < BOARD_SIZE; column++) {
-                if (board[row][column] == NO_VALUE) {
+                if (matrixBoard[row][column] == NO_VALUE) {
                     for (int k = MIN_VALUE; k <= MAX_VALUE; k++) {
-                        board[row][column] = k;
-                        if (isValid(board, row, column) && solve(board)) {
+                        matrixBoard[row][column] = k;
+                        if (isValid(matrixBoard, row, column) && solve(matrixBoard)) {
                             return true;
                         }
-                        board[row][column] = NO_VALUE;
+                        matrixBoard[row][column] = NO_VALUE;
                     }
                     return false;
                 }
@@ -51,14 +54,20 @@ public class SudokuSolverBuiltIn {
 
     private boolean rowConstraint(int[][] board, int row) {
         boolean[] constraint = new boolean[BOARD_SIZE];
-        return IntStream.range(BOARD_START_INDEX, BOARD_SIZE)
-                .allMatch(column -> checkConstraint(board, row, constraint, column));
+        for (int i = BOARD_START_INDEX; i < BOARD_SIZE; i++) {
+            if (checkConstraint(board, row, constraint, i)) continue;
+            else return false;
+        }
+        return true;
     }
 
     private boolean columnConstraint(int[][] board, int column) {
         boolean[] constraint = new boolean[BOARD_SIZE];
-        return IntStream.range(BOARD_START_INDEX, BOARD_SIZE)
-                .allMatch(row -> checkConstraint(board, row, constraint, column));
+        for (int i = BOARD_START_INDEX; i < BOARD_SIZE; i++) {
+            if (checkConstraint(board, column, constraint, i)) continue;
+            else return false;
+        }
+        return true;
     }
 
     private boolean subsectionConstraint(int[][] board, int row, int column) {
