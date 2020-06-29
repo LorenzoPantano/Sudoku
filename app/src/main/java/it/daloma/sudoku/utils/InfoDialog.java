@@ -3,7 +3,6 @@ package it.daloma.sudoku.utils;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.view.LayoutInflater;
-
 import it.daloma.sudoku.R;
 
 public class InfoDialog {
