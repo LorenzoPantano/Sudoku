@@ -38,12 +38,12 @@ import it.daloma.sudoku.models.Board;
 import it.daloma.sudoku.models.Cell;
 import it.daloma.sudoku.utils.LoadingDialog;
 import it.daloma.sudoku.utils.NewGameErrorDialog;
+import it.daloma.sudoku.utils.SudokuSolver;
 
 public class SudokuGenerator implements Response.ErrorListener, Response.Listener<JSONObject> {
 
     private static final String TAG = "SUDOKU_GENERATOR";
-    private String url = "https://sugoku.herokuapp.com/board?difficulty=";
-    public int[][] puzzle = new int[9][9];
+    private String urlGenerate = "https://sugoku.herokuapp.com/board?difficulty=";
     ArrayList<Cell> generatedPuzzleCells = new ArrayList<>();
     private RequestQueue requestQueue;
     private Context context;
@@ -58,30 +58,23 @@ public class SudokuGenerator implements Response.ErrorListener, Response.Listene
         this.newGameErrorDialog = new NewGameErrorDialog((Activity) context);
     }
 
-    public int[][] getPuzzle() {
-        return puzzle;
-    }
-
-    public void setPuzzle(int[][] puzzle) {
-        this.puzzle = puzzle;
-    }
 
     private void setDifficulty(int difficulty) {
         switch (difficulty){
             case Globals.EASY:
-                url = url.concat("easy");
+                urlGenerate = urlGenerate.concat("easy");
                 difficultyForIntent = Globals.EASY;
                 break;
             case Globals.MEDIUM:
-                url = url.concat("medium");
+                urlGenerate = urlGenerate.concat("medium");
                 difficultyForIntent = Globals.MEDIUM;
                 break;
             case Globals.HARD:
-                url = url.concat("hard");
+                urlGenerate = urlGenerate.concat("hard");
                 difficultyForIntent = Globals.HARD;
                 break;
             default:
-                url = url.concat("random");
+                urlGenerate = urlGenerate.concat("random");
                 break;
         }
     }
@@ -90,10 +83,10 @@ public class SudokuGenerator implements Response.ErrorListener, Response.Listene
         loadingDialog.startLoadingDialog();
         setDifficulty(difficulty);
         System.out.println("Set Difficulty");
-        JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url,null,this, this);
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, urlGenerate,null,this, this);
         requestQueue.add(request);
         System.out.println("Made request");
-        url = "https://sugoku.herokuapp.com/board?difficulty=";
+        urlGenerate = "https://sugoku.herokuapp.com/board?difficulty=";
     }
 
     @Override
@@ -108,10 +101,6 @@ public class SudokuGenerator implements Response.ErrorListener, Response.Listene
     public void onResponse(JSONObject response) {
 
         System.out.println("Response");
-        //Check if not empty
-        if (response.length() == 0){
-
-        } //Error Handling
 
         try {
             JSONArray board = response.getJSONArray("board");

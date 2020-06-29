@@ -3,14 +3,18 @@ package it.daloma.sudoku;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
+import android.content.SharedPreferences;
 import android.content.res.ColorStateList;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.TextView;
 
 public class StatsActivity extends AppCompatActivity {
 
     private Button[] diffButtons = new Button[3];
+    private ImageButton imgbtnBackStats;
     private static final int[] BUTTONS_ID = {
             R.id.btnEasy,
             R.id.btnMedium,
@@ -18,6 +22,10 @@ public class StatsActivity extends AppCompatActivity {
     };
     private int selectedButton = 0;
     StatsActivityClickListener statsActivityClickListener = new StatsActivityClickListener();
+    SharedPreferences sharedPreferences;
+
+    TextView tvGamesPlayedNumber, tvGamesWonNumber, tvWinRateNumber, tvBestTimeNumber, tvAverageTimeNumber;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,6 +36,39 @@ public class StatsActivity extends AppCompatActivity {
         for (int i = 0; i < 3; i++) {
             diffButtons[i] = findViewById(BUTTONS_ID[i]);
             diffButtons[i].setOnClickListener(statsActivityClickListener);
+        }
+
+        selectDifficulty();
+
+        tvGamesPlayedNumber = findViewById(R.id.tvGamesPlayedNumber);
+        tvGamesWonNumber = findViewById(R.id.tvGamesWonNumber);
+        tvWinRateNumber = findViewById(R.id.tvWinRateNumber);
+        tvBestTimeNumber = findViewById(R.id.tvBestTimeNumber);
+        tvAverageTimeNumber = findViewById(R.id.tvAverageTimeNumber);
+
+        imgbtnBackStats = findViewById(R.id.imgbtnBackStats);
+        imgbtnBackStats.setOnClickListener(statsActivityClickListener);
+
+        updateTextViews();
+
+    }
+
+    private void updateTextViews() {
+        tvGamesPlayedNumber.setText(Integer.toString(sharedPreferences.getInt("Games Played", 0)));
+    }
+
+    private void selectDifficulty() {
+        switch (selectedButton) {
+            case 0:
+                //Shared Preferences
+                sharedPreferences = getSharedPreferences("Game_EASY", MODE_PRIVATE);
+                break;
+            case 1:
+                sharedPreferences = getSharedPreferences("Game_MEDIUM", MODE_PRIVATE);
+                break;
+            case 2:
+                sharedPreferences = getSharedPreferences("Game_HARD", MODE_PRIVATE);
+                break;
         }
     }
 
@@ -46,6 +87,8 @@ public class StatsActivity extends AppCompatActivity {
                             diffButtons[i].setTextColor(ContextCompat.getColor(StatsActivity.this, R.color.background_black));
                             diffButtons[i].setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(StatsActivity.this, R.color.background_white)));
                         }
+                        selectDifficulty();
+                        updateTextViews();
                         break;
                     }
 
@@ -61,6 +104,8 @@ public class StatsActivity extends AppCompatActivity {
                             diffButtons[i].setTextColor(ContextCompat.getColor(StatsActivity.this, R.color.background_black));
                             diffButtons[i].setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(StatsActivity.this, R.color.background_white)));
                         }
+                        selectDifficulty();
+                        updateTextViews();
                         break;
                     }
 
@@ -75,9 +120,14 @@ public class StatsActivity extends AppCompatActivity {
                             diffButtons[i].setTextColor(ContextCompat.getColor(StatsActivity.this, R.color.background_black));
                             diffButtons[i].setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(StatsActivity.this, R.color.background_white)));
                         }
+                        selectDifficulty();
+                        updateTextViews();
                         break;
                     }
 
+                case R.id.imgbtnBackStats:
+                    onBackPressed();
+                    break;
 
             }
         }

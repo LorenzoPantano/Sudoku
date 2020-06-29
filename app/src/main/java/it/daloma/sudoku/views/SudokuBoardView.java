@@ -190,8 +190,50 @@ public class SudokuBoardView extends View {
 
                         case 2:
                             //TOP RIGHT
-                            canvas.drawText(annotationText, (col* cellSizePixels + cellSizePixels - cellSizePixels/3 + thickPaint.getStrokeWidth() - textWidth/2 + padding),
+                            canvas.drawText(annotationText, (col* cellSizePixels + cellSizePixels/2 + cellSizePixels/3 - textWidth/2 + padding),
                                     (row*cellSizePixels + cellSizePixels/3 - textHeight/2 + thickPaint.getStrokeWidth() + padding),
+                                    selectedCell ? textAnnotationPaintHighlighted : textAnnotationPaint);
+                            break;
+
+                        case 3:
+                            //CENTER LEFT
+                            canvas.drawText(annotationText, (col* cellSizePixels + cellSizePixels/3 - textWidth/2 + padding),
+                                    (row*cellSizePixels + cellSizePixels/2 - textHeight/2 + thickPaint.getStrokeWidth() + padding),
+                                    selectedCell ? textAnnotationPaintHighlighted : textAnnotationPaint);
+                            break;
+
+                        case 4:
+                            //CENTER
+                            canvas.drawText(annotationText, (col* cellSizePixels + cellSizePixels/2 + thickPaint.getStrokeWidth() - textWidth/2 + padding),
+                                    (row*cellSizePixels + cellSizePixels/2 - textHeight/2 + thickPaint.getStrokeWidth() + padding),
+                                    selectedCell ? textAnnotationPaintHighlighted : textAnnotationPaint);
+                            break;
+
+                        case 5:
+                            //CENTER RIGHT
+                            canvas.drawText(annotationText, (col* cellSizePixels + cellSizePixels/2 + cellSizePixels/3 - textWidth/2 + padding),
+                                    (row*cellSizePixels + cellSizePixels/2 - textHeight/2 + thickPaint.getStrokeWidth() + padding),
+                                    selectedCell ? textAnnotationPaintHighlighted : textAnnotationPaint);
+                            break;
+
+                        case 6:
+                            //BOTTOM LEFT
+                            canvas.drawText(annotationText, (col* cellSizePixels + cellSizePixels/3 - textWidth/2 + padding),
+                                    (row*cellSizePixels + cellSizePixels/3 + cellSizePixels/2 - textHeight/2 + thickPaint.getStrokeWidth() + padding),
+                                    selectedCell ? textAnnotationPaintHighlighted : textAnnotationPaint);
+                            break;
+
+                        case 7:
+                            //BOTTOM CENTER
+                            canvas.drawText(annotationText, (col* cellSizePixels + cellSizePixels/2 + thickPaint.getStrokeWidth() - textWidth/2 + padding),
+                                    (row*cellSizePixels + cellSizePixels/3 + cellSizePixels/2 - textHeight/2 + thickPaint.getStrokeWidth() + padding),
+                                    selectedCell ? textAnnotationPaintHighlighted : textAnnotationPaint);
+                            break;
+
+                        case 8:
+                            //BOTTOM RIGHT
+                            canvas.drawText(annotationText, (col* cellSizePixels + cellSizePixels/2 + cellSizePixels/3 - textWidth/2 + padding),
+                                    (row*cellSizePixels + cellSizePixels/3 + cellSizePixels/2 - textHeight/2 + thickPaint.getStrokeWidth() + padding),
                                     selectedCell ? textAnnotationPaintHighlighted : textAnnotationPaint);
 
                     }

@@ -9,7 +9,7 @@
     tools:context=".StatsActivity">
 
     <ImageButton
-        android:id="@+id/imageButton3"
+        android:id="@+id/imgbtnBackStats"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
@@ -29,7 +29,7 @@
         android:textColor="@color/pantone_classic_blue"
         android:textSize="24sp"
         android:text="@string/title_activity_stats"
-        app:layout_constraintStart_toEndOf="@+id/imageButton3"
+        app:layout_constraintStart_toEndOf="@+id/imgbtnBackStats"
         app:layout_constraintTop_toTopOf="parent"/>
 
     <LinearLayout
@@ -44,7 +44,7 @@
         android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageButton3">
+        app:layout_constraintTop_toBottomOf="@+id/imgbtnBackStats">
 
         <Button
             android:id="@+id/btnEasy"
@@ -153,8 +153,8 @@
         android:layout_marginTop="16dp"
         android:layout_marginEnd="32dp"
         android:text="3"
-        android:textSize="16sp"
         android:textColor="@color/pantone_classic_blue"
+        android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/view" />
 

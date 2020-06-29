@@ -16,7 +16,7 @@
         android:textColor="@color/pantone_classic_blue"
         android:textSize="18sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageButton" />
+        app:layout_constraintTop_toBottomOf="@+id/imgbtnBackGame" />
 
     <GridLayout
         android:id="@+id/gridLayoutControls"
@@ -125,12 +125,12 @@
     </GridLayout>
 
     <ImageButton
-        android:id="@+id/imageButton"
+        android:id="@+id/imgbtnBackGame"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
         android:layout_marginTop="24dp"
-        android:backgroundTint="@color/transparent"
+        android:background="@drawable/controls_circular_buttons"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/baseline_arrow_back_ios_24"
@@ -158,14 +158,6 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent">
 
-        <ImageButton
-            android:id="@+id/imgbtnRestart"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/controls_circular_buttons"
-            android:backgroundTint="@color/transparent"
-            android:src="@drawable/baseline_refresh_24"
-            android:tint="@color/pantone_classic_blue" />
 
         <ImageButton
             android:id="@+id/imgbtnEdit"
@@ -180,7 +172,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/controls_circular_buttons"
-            android:backgroundTint="@color/transparent"
             android:src="@drawable/baseline_undo_24"
             android:tint="@color/pantone_classic_blue" />
 
@@ -189,7 +180,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/controls_circular_buttons"
-            android:backgroundTint="@color/transparent"
             android:src="@drawable/baseline_emoji_objects_24"
             android:tint="@color/pantone_classic_blue" />
 
@@ -197,13 +187,13 @@
     </LinearLayout>
 
     <ImageButton
-        android:id="@+id/imageButton2"
+        android:id="@+id/imgbtnValidate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="24dp"
         android:layout_marginBottom="32dp"
-        android:backgroundTint="@color/transparent"
         android:tint="@color/pantone_classic_blue"
+        android:background="@drawable/controls_circular_buttons"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:srcCompat="@drawable/baseline_done_white_36" />
@@ -215,6 +205,33 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tvDifficultyGame" />
+
+    <View
+        android:id="@+id/emptyView1"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@+id/tvDifficultyGame"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/chronometer"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <View
+        android:id="@+id/emptyView3"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/imgbtnValidate"
+        app:layout_constraintStart_toEndOf="@+id/linearLayout2"
+        app:layout_constraintTop_toBottomOf="@+id/gridLayoutControls"/>
+
+    <View
+        android:id="@+id/emptyView2"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@+id/gridLayoutControls"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/sudokuView"/>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

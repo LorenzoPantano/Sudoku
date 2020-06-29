@@ -2,6 +2,8 @@ package it.daloma.sudoku;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.ColorStateList;
@@ -14,6 +16,7 @@ import android.widget.Chronometer;
 import android.widget.GridLayout;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 
@@ -43,7 +46,8 @@ public class GameActivity extends AppCompatActivity {
             R.id.buttonCancel
     };
 
-    ImageButton imgbtnEdit, imgbtnRestart, imgbtnHint, imgbtnUndo;
+    ImageButton imgbtnEdit, imgbtnHint, imgbtnUndo, imgbtnBackGame, imgbtnValidate;
+    View emptyView1, emptyView2, emptyView3; //Per gestire click fuori dalla board
 
     NumbersOnClickListener numbersOnClickListener;
     ActionOnClickListener actionOnClickListener;
@@ -56,6 +60,8 @@ public class GameActivity extends AppCompatActivity {
     private TextView tvDifficultyGame;
     private String difficultyString = "Null";
     private boolean editing = false;
+    private boolean endingGame = false;
+    private boolean gameWon = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -118,12 +124,21 @@ public class GameActivity extends AppCompatActivity {
         actionOnClickListener = new ActionOnClickListener();
         imgbtnEdit = findViewById(R.id.imgbtnEdit);
         imgbtnHint = findViewById(R.id.imgbtnHint);
-        imgbtnRestart = findViewById(R.id.imgbtnRestart);
         imgbtnUndo = findViewById(R.id.imgbtnUndo);
+        imgbtnBackGame = findViewById(R.id.imgbtnBackGame);
+        imgbtnValidate = findViewById(R.id.imgbtnValidate);
         imgbtnEdit.setOnClickListener(actionOnClickListener);
         imgbtnUndo.setOnClickListener(actionOnClickListener);
-        imgbtnRestart.setOnClickListener(actionOnClickListener);
         imgbtnHint.setOnClickListener(actionOnClickListener);
+        imgbtnBackGame.setOnClickListener(actionOnClickListener);
+        imgbtnValidate.setOnClickListener(actionOnClickListener);
+
+        emptyView1 = findViewById(R.id.emptyView1);
+        emptyView2 = findViewById(R.id.emptyView2);
+        emptyView3 = findViewById(R.id.emptyView3);
+        emptyView1.setOnClickListener(actionOnClickListener);
+        emptyView2.setOnClickListener(actionOnClickListener);
+        emptyView3.setOnClickListener(actionOnClickListener);
 
         //Chronometer setup
         chronometer = findViewById(R.id.chronometer);
@@ -145,7 +160,7 @@ public class GameActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         //Save board
-        saveState(board);
+        //saveState(board);
         super.onBackPressed();
     }
 
@@ -155,12 +170,24 @@ public class GameActivity extends AppCompatActivity {
     }
 
     public void saveState(Board board) {
-        editor = sharedPreferences.edit();
-        Gson gson = new Gson();
-        editor.putString("saved_board", gson.toJson(board));
-        editor.putInt("difficulty", difficulty);
-        chronometer.stop();
-        editor.apply();
+        if (endingGame) {
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.putInt("Games Played", sharedPreferences.getInt("Games Played", 0) + 1);
+            if (gameWon) {
+                editor.putInt("Games Won", sharedPreferences.getInt("Games Won", 0) + 1);
+            }
+            editor.putInt("difficulty", -1);
+            editor.apply();
+        } else {
+            editor = sharedPreferences.edit();
+            Gson gson = new Gson();
+            editor.putString("saved_board", gson.toJson(board));
+            editor.putInt("difficulty", difficulty);
+            chronometer.stop();
+            //TODO: Salva tempo
+            editor.apply();
+        }
+
     }
 
 
@@ -179,6 +206,9 @@ public class GameActivity extends AppCompatActivity {
             Log.w(TAG, "onClick: Clicked");
             int rowClicked = sudokuModel.getSelectedRow();
             int colClicked = sudokuModel.getSelectedCol();
+
+            if (rowClicked == -1 || colClicked == -1) return;
+
             Cell selectedCell;
             final int index = rowClicked * (Globals.SIZE) + colClicked;
 
@@ -303,8 +333,49 @@ public class GameActivity extends AppCompatActivity {
                         break;
                     }
 
+                case R.id.imgbtnBackGame:
+                    onBackPressed();
+                    break;
+
+
+                case R.id.imgbtnHint:
+                    int selectedRow = sudokuModel.getSelectedRow();
+                    int selectedCol = sudokuModel.getSelectedCol();
+
+                    if (selectedRow == -1 || selectedCol == -1) {
+                        Toast.makeText(GameActivity.this, "Choose a cell", Toast.LENGTH_SHORT).show();
+                        break;
+                    }
+
+                    //TODO: Implement hint
+
+                    break;
+
+                case R.id.imgbtnValidate:
+                    endGame();
+                    break;
+
+                case R.id.emptyView1:
+
+                case R.id.emptyView3:
+
+                case R.id.emptyView2:
+                    handleOutsideClick();
+                    break;
+
             }
 
         }
+
+        public void handleOutsideClick() {
+            sudokuModel.setSelectedCol(-1);
+            sudokuModel.setSelectedRow(-1);
+            sudokuBoardView.postInvalidate();
+        }
+    }
+
+    private void endGame() {
+        endingGame = true;
+        onBackPressed();
     }
 }
