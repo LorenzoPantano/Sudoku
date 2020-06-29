@@ -173,7 +173,8 @@
             android:layout_height="wrap_content"
             android:background="@drawable/controls_circular_buttons"
             android:src="@drawable/baseline_undo_24"
-            android:tint="@color/pantone_classic_blue" />
+            android:tint="@color/pantone_classic_blue"
+            android:contentDescription="TODO" />
 
         <ImageButton
             android:id="@+id/imgbtnHint"

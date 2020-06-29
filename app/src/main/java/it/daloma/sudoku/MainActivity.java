@@ -30,6 +30,7 @@ import com.google.gson.Gson;
 import java.time.LocalTime;
 
 import it.daloma.sudoku.models.Board;
+import it.daloma.sudoku.utils.InfoDialog;
 import it.daloma.sudoku.utils.LoadingDialog;
 
 public class MainActivity extends AppCompatActivity {
@@ -212,6 +213,12 @@ public class MainActivity extends AppCompatActivity {
                 case R.id.imgbtnSettings:
                     Intent settingsIntent = new Intent(MainActivity.this, SettingsActivity.class);
                     startActivity(settingsIntent);
+                    break;
+
+                case R.id.imgbtnInfo:
+                    InfoDialog info = new InfoDialog(MainActivity.this);
+                    info.startLoadingDialog();
+                    info.cancelOnTouchOutside();
                     break;
             }
         }
