@@ -6,13 +6,18 @@ import androidx.core.content.ContextCompat;
 import android.content.SharedPreferences;
 import android.content.res.ColorStateList;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+import java.util.Collections;
+
 public class StatsActivity extends AppCompatActivity {
 
+    private static final String TAG = "STATS_ACTIVITY";
     private Button[] diffButtons = new Button[3];
     private ImageButton imgbtnBackStats;
     private static final int[] BUTTONS_ID = {
@@ -55,6 +60,49 @@ public class StatsActivity extends AppCompatActivity {
 
     private void updateTextViews() {
         tvGamesPlayedNumber.setText(Integer.toString(sharedPreferences.getInt("Games Played", 0)));
+        tvBestTimeNumber.setText(calculcateBestTime());
+        tvAverageTimeNumber.setText(calculcateAverageTime());
+    }
+
+    private String calculcateAverageTime() {
+        int gameNumber = sharedPreferences.getInt("Games Played", 0);
+        ArrayList<Long> timesForDifficulty = new ArrayList<>();
+        for (int game = gameNumber; game > 0 ; game--) {
+            Log.d(TAG, "calculcateBestTime: GAME: " + game + " TIME MS: " + sharedPreferences.getLong("Game Time " + game, 0));
+            timesForDifficulty.add(sharedPreferences.getLong("Game Time " + game, 0));
+        }
+        if (gameNumber == 0) {
+            return "No games played";
+        } else {
+            long totalSumTimes = 0;
+            for (long time: timesForDifficulty) {
+                totalSumTimes = totalSumTimes + time;
+            }
+            long averageTime = totalSumTimes/timesForDifficulty.size();
+            long minutes = (averageTime / 1000) / 60;
+            long seconds = (averageTime / 1000) % 60;
+            String averageTimeString = "";
+            return averageTimeString + minutes + ":" + seconds;
+        }
+    }
+
+    private String calculcateBestTime() {
+        int gameNumber = sharedPreferences.getInt("Games Played", 0);
+        ArrayList<Long> timesForDifficulty = new ArrayList<>();
+        for (int game = gameNumber; game > 0 ; game--) {
+            Log.d(TAG, "calculcateBestTime: GAME: " + game + " TIME MS: " + sharedPreferences.getLong("Game Time " + game, 0));
+            timesForDifficulty.add(sharedPreferences.getLong("Game Time " + game, 0));
+        }
+        if (gameNumber == 0) {
+            return "No games played";
+        } else {
+            Collections.sort(timesForDifficulty);
+            long bestTime = timesForDifficulty.get(0);
+            long minutes = (bestTime / 1000) / 60;
+            long seconds = (bestTime / 1000) % 60;
+            String bestTimeString = "";
+            return bestTimeString + minutes + ":" + seconds;
+        }
     }
 
     private void selectDifficulty() {

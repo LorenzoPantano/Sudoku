@@ -20,6 +20,8 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 
+import java.util.ArrayList;
+
 import it.daloma.sudoku.models.Board;
 import it.daloma.sudoku.models.Cell;
 import it.daloma.sudoku.models.SudokuModel;
@@ -61,7 +63,7 @@ public class GameActivity extends AppCompatActivity {
     private String difficultyString = "Null";
     private boolean editing = false;
     private boolean endingGame = false;
-    private boolean gameWon = false;
+    private boolean gameWon = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -142,10 +144,8 @@ public class GameActivity extends AppCompatActivity {
 
         //Chronometer setup
         chronometer = findViewById(R.id.chronometer);
+        if (!isNewGame) chronometer.setCurrentTime(sharedPreferences.getLong("saved_time", 0));
         chronometer.start();
-
-        //Chronometer.setBase() può essere usato per impostare un tempo di partenza
-        //da salvare dall'ultima partita
 
 
     }
@@ -170,21 +170,25 @@ public class GameActivity extends AppCompatActivity {
     }
 
     public void saveState(Board board) {
+        Gson gson = new Gson();
         if (endingGame) {
             SharedPreferences.Editor editor = sharedPreferences.edit();
             editor.putInt("Games Played", sharedPreferences.getInt("Games Played", 0) + 1);
             if (gameWon) {
                 editor.putInt("Games Won", sharedPreferences.getInt("Games Won", 0) + 1);
+                editor.putLong("Game Time " + (sharedPreferences.getInt("Games Played", 0) + 1), (SystemClock.elapsedRealtime() - chronometer.getBase()));
+                Log.d(TAG, "saveState: GAME TIME MS: " + (SystemClock.elapsedRealtime() - chronometer.getBase()));
+                chronometer.stop();
             }
             editor.putInt("difficulty", -1);
             editor.apply();
         } else {
             editor = sharedPreferences.edit();
-            Gson gson = new Gson();
             editor.putString("saved_board", gson.toJson(board));
             editor.putInt("difficulty", difficulty);
+            Log.d(TAG, "saveState: SAVING CURRENT TIME MS: " + (SystemClock.elapsedRealtime() - chronometer.getBase()));
+            editor.putLong("saved_time", (SystemClock.elapsedRealtime() - chronometer.getBase()));
             chronometer.stop();
-            //TODO: Salva tempo
             editor.apply();
         }
 

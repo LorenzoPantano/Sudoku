@@ -22,14 +22,11 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextSwitcher;
 import android.widget.TextView;
-import android.widget.Toast;
 import android.widget.ViewSwitcher;
 
 import com.google.gson.Gson;
-
-import java.time.LocalTime;
-
 import it.daloma.sudoku.models.Board;
+import it.daloma.sudoku.utils.InfoDialog;
 import it.daloma.sudoku.utils.LoadingDialog;
 
 public class MainActivity extends AppCompatActivity {
@@ -42,6 +39,7 @@ public class MainActivity extends AppCompatActivity {
     private int selectedDifficulty = 0;  //Potrebbe essere preso da SharedPreferences salvando l'ultima partita
     private SudokuGenerator sudokuGenerator;
     private LoadingDialog loadingDialog;
+    private InfoDialog infoDialog;
     SharedPreferences sharedPreferencesEasy;
     SharedPreferences sharedPreferencesMedium;
     SharedPreferences sharedPreferencesHard;
@@ -212,6 +210,11 @@ public class MainActivity extends AppCompatActivity {
                 case R.id.imgbtnSettings:
                     Intent settingsIntent = new Intent(MainActivity.this, SettingsActivity.class);
                     startActivity(settingsIntent);
+                    break;
+
+                case R.id.imgbtnInfo:
+                    infoDialog = new InfoDialog(MainActivity.this);
+                    infoDialog.startLoadingDialog();
                     break;
             }
         }
