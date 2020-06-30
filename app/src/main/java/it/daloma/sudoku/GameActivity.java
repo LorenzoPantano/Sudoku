@@ -25,6 +25,8 @@ import java.util.ArrayList;
 import it.daloma.sudoku.models.Board;
 import it.daloma.sudoku.models.Cell;
 import it.daloma.sudoku.models.SudokuModel;
+import it.daloma.sudoku.utils.Utils;
+import it.daloma.sudoku.utils.WinningDialog;
 import it.daloma.sudoku.views.PausableChronometer;
 import it.daloma.sudoku.views.SudokuBoardView;
 
@@ -54,6 +56,8 @@ public class GameActivity extends AppCompatActivity {
     NumbersOnClickListener numbersOnClickListener;
     ActionOnClickListener actionOnClickListener;
     private Board board;
+    private int[] monoSolvedBoard;
+    private int[][] solvedBoard;
     private SudokuModel sudokuModel;
     private SudokuBoardView sudokuBoardView;
     private int difficulty;
@@ -63,7 +67,7 @@ public class GameActivity extends AppCompatActivity {
     private String difficultyString = "Null";
     private boolean editing = false;
     private boolean endingGame = false;
-    private boolean gameWon = true;
+    private boolean gameWon = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,21 +80,24 @@ public class GameActivity extends AppCompatActivity {
         * Board Setup
         * */
         Intent gameIntent = getIntent();
+        Gson gson = new Gson();
         boolean isNewGame = gameIntent.getBooleanExtra("new game", false);
         if (isNewGame) {
             board = gameIntent.getParcelableExtra("Board");
-            sudokuModel = new SudokuModel(board, isNewGame);
-            sudokuModel.getBoard().printBoard();
+            sudokuModel = new SudokuModel(board, true);
             sudokuBoardView = findViewById(R.id.sudokuView);
             sudokuBoardView.setSudokuModel(sudokuModel);
             difficulty = gameIntent.getIntExtra("difficulty", -1);
+            monoSolvedBoard = gameIntent.getIntArrayExtra("Solved board");
+            solvedBoard = Utils.convertMonoToBidimensionalArray(monoSolvedBoard);
         } else {
             board = gameIntent.getParcelableExtra("Board");
-            sudokuModel = new SudokuModel(board, isNewGame);
-            sudokuModel.getBoard().printBoard();
+            sudokuModel = new SudokuModel(board, false);
             sudokuBoardView = findViewById(R.id.sudokuView);
             sudokuBoardView.setSudokuModel(sudokuModel);
             difficulty = gameIntent.getIntExtra("difficulty", -1);
+            monoSolvedBoard = gameIntent.getIntArrayExtra("Solved board");
+            solvedBoard = Utils.convertMonoToBidimensionalArray(monoSolvedBoard);
         }
 
         //Difficulty TextView
@@ -146,6 +153,9 @@ public class GameActivity extends AppCompatActivity {
         chronometer = findViewById(R.id.chronometer);
         if (!isNewGame) chronometer.setCurrentTime(sharedPreferences.getLong("saved_time", 0));
         chronometer.start();
+
+        //Restore solved board
+
 
 
     }
@@ -302,7 +312,7 @@ public class GameActivity extends AppCompatActivity {
             return;
         }
 
-        private void insertValueInCell(Cell selectedCell, int value) {
+        public void insertValueInCell(Cell selectedCell, int value) {
             if (selectedCell.isStartingCell()) {
                 Log.d(TAG, "onClick: CAN'T EDIT STARTING CELL");
                 return;
@@ -352,7 +362,9 @@ public class GameActivity extends AppCompatActivity {
                     }
 
                     //TODO: Implement hint
-
+                    int suggestedValue = solvedBoard[selectedRow][selectedCol];
+                    Cell selectedCell = board.getCell(selectedRow * (Globals.SIZE) + selectedCol);
+                    numbersOnClickListener.insertValueInCell(selectedCell, suggestedValue);
                     break;
 
                 case R.id.imgbtnValidate:
@@ -380,6 +392,16 @@ public class GameActivity extends AppCompatActivity {
 
     private void endGame() {
         endingGame = true;
+        if (Utils.compare(board, solvedBoard)) {
+            //GAME VINTO
+            Log.d(TAG, "endGame: GAME WON");
+            WinningDialog winningDialog = new WinningDialog(GameActivity.this);
+            winningDialog.startLoadingDialog();
+            gameWon = true;
+        } else {
+            Log.d(TAG, "endGame: GAME LOSS");
+            gameWon = false;
+        }
         onBackPressed();
     }
 }

@@ -59,9 +59,17 @@ public class StatsActivity extends AppCompatActivity {
     }
 
     private void updateTextViews() {
-        tvGamesPlayedNumber.setText(Integer.toString(sharedPreferences.getInt("Games Played", 0)));
+        int games_played = sharedPreferences.getInt("Games Played", 0);
+        int games_won = sharedPreferences.getInt("Games Won", 0);
+        tvGamesPlayedNumber.setText(Integer.toString(games_played));
         tvBestTimeNumber.setText(calculcateBestTime());
         tvAverageTimeNumber.setText(calculcateAverageTime());
+        tvGamesWonNumber.setText(Integer.toString(games_won));
+        if (games_won == 0) {
+            tvWinRateNumber.setText("No games won");
+            return;
+        }
+        tvWinRateNumber.setText(Double.toString((games_won/games_won)*100) + "%");
     }
 
     private String calculcateAverageTime() {

@@ -28,6 +28,8 @@ public class Board implements Parcelable {
         }
     }
 
+
+
     protected Board(Parcel in) {
         if (in.readByte() == 0x01) {
             cellList = new ArrayList<Cell>();

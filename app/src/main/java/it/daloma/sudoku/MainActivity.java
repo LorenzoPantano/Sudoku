@@ -25,9 +25,15 @@ import android.widget.TextView;
 import android.widget.ViewSwitcher;
 
 import com.google.gson.Gson;
+
+import java.lang.reflect.Array;
+import java.lang.reflect.Type;
+
 import it.daloma.sudoku.models.Board;
 import it.daloma.sudoku.utils.InfoDialog;
 import it.daloma.sudoku.utils.LoadingDialog;
+import it.daloma.sudoku.utils.ResumingGameDialog;
+import it.daloma.sudoku.utils.Utils;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -166,14 +172,21 @@ public class MainActivity extends AppCompatActivity {
                     break;
 
                 case R.id.btnResume:
+                    ResumingGameDialog resumingGameDialog = new ResumingGameDialog(MainActivity.this);
+                    resumingGameDialog.startLoadingDialog();
                     Intent gameIntent = new Intent(MainActivity.this, GameActivity.class);
                     Gson gson = new Gson();
                     String boardFromSharedPrefs = sharedPreferences.getString("saved_board", "DEFAULT");
                     Log.d(TAG, "onClick: FROM SHARED PREFS " + boardFromSharedPrefs);
                     Board board = gson.fromJson(boardFromSharedPrefs, Board.class);
+                    SudokuSolver sudokuSolver = new SudokuSolver(Utils.convertBoardToMatrix(board));
+                    sudokuSolver.solve();
+                    int[] monoBoard = Utils.convertBiToMonodimensionalArray(sudokuSolver.getBoard());
                     gameIntent.putExtra("Board", board);
                     gameIntent.putExtra("new_game", false);
                     gameIntent.putExtra("difficulty", selectedDifficulty);
+                    gameIntent.putExtra("Solved board", monoBoard);
+                    resumingGameDialog.dismissDialog();
                     startActivity(gameIntent);
                     break;
 

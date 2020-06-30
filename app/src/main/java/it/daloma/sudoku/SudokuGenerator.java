@@ -38,7 +38,7 @@ import it.daloma.sudoku.models.Board;
 import it.daloma.sudoku.models.Cell;
 import it.daloma.sudoku.utils.LoadingDialog;
 import it.daloma.sudoku.utils.NewGameErrorDialog;
-import it.daloma.sudoku.utils.SudokuSolver;
+import it.daloma.sudoku.utils.Utils;
 
 public class SudokuGenerator implements Response.ErrorListener, Response.Listener<JSONObject> {
 
@@ -126,11 +126,15 @@ public class SudokuGenerator implements Response.ErrorListener, Response.Listene
 
         Board generatedBoard = new Board(generatedPuzzleCells);
         generatedBoard.printBoard();
+        SudokuSolver sudokuSolver = new SudokuSolver(Utils.convertBoardToMatrix(generatedBoard));
+        sudokuSolver.solve();
+        int[] monoBoard = Utils.convertBiToMonodimensionalArray(sudokuSolver.getBoard());
         loadingDialog.dismissDialog();
         Intent gameIntent = new Intent(context, GameActivity.class);
         gameIntent.putExtra("Board", generatedBoard);
         gameIntent.putExtra("new game",true);
         gameIntent.putExtra("difficulty", difficultyForIntent);
+        gameIntent.putExtra("Solved board", monoBoard);
         context.startActivity(gameIntent);
     }
 }
