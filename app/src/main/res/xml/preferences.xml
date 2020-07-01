@@ -18,11 +18,6 @@
             app:summary="Starts a counter for the time spent on a game"
             app:title="Show Elapsed Time" />
 
-        <SwitchPreferenceCompat
-            app:defaultValue="false"
-            app:key="autovalidateEveryNumber"
-            app:summary="Checks if the input number is in the right position"
-            app:title="Autovalidate Every Number" />
 
         <SwitchPreferenceCompat
             app:defaultValue="true"

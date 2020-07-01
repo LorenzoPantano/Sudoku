@@ -1,6 +1,7 @@
 package it.daloma.sudoku;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.preference.PreferenceManager;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -62,6 +63,7 @@ public class GameActivity extends AppCompatActivity {
     private SudokuBoardView sudokuBoardView;
     private int difficulty;
     SharedPreferences sharedPreferences;
+    SharedPreferences sharedPreferencesSettings;
     SharedPreferences.Editor editor;
     private TextView tvDifficultyGame;
     private String difficultyString = "Null";
@@ -105,14 +107,14 @@ public class GameActivity extends AppCompatActivity {
             case 0:
                 //Shared Preferences
                 sharedPreferences = getSharedPreferences("Game_EASY", MODE_PRIVATE);
-                difficultyString = "Easy";
+                difficultyString = getResources().getString(R.string.difficulty_Easy);
                 break;
             case 1:
-                difficultyString = "Medium";
+                difficultyString = getResources().getString(R.string.difficulty_Medium);
                 sharedPreferences = getSharedPreferences("Game_MEDIUM", MODE_PRIVATE);
                 break;
             case 2:
-                difficultyString = "Hard";
+                difficultyString = getResources().getString(R.string.difficulty_Hard);
                 sharedPreferences = getSharedPreferences("Game_HARD", MODE_PRIVATE);
                 break;
         }
@@ -153,6 +155,10 @@ public class GameActivity extends AppCompatActivity {
         chronometer = findViewById(R.id.chronometer);
         if (!isNewGame) chronometer.setCurrentTime(sharedPreferences.getLong("saved_time", 0));
         chronometer.start();
+        sharedPreferencesSettings = PreferenceManager.getDefaultSharedPreferences(this);
+        if (sharedPreferencesSettings.getBoolean("showElapsedTime", true) == false) {
+            chronometer.setVisibility(View.INVISIBLE);
+        }
 
         //Restore solved board
 
@@ -186,7 +192,11 @@ public class GameActivity extends AppCompatActivity {
             editor.putInt("Games Played", sharedPreferences.getInt("Games Played", 0) + 1);
             if (gameWon) {
                 editor.putInt("Games Won", sharedPreferences.getInt("Games Won", 0) + 1);
-                editor.putLong("Game Time " + (sharedPreferences.getInt("Games Played", 0) + 1), (SystemClock.elapsedRealtime() - chronometer.getBase()));
+                editor.putLong("Game Time Win" + (sharedPreferences.getInt("Games Won", 0) + 1), (SystemClock.elapsedRealtime() - chronometer.getBase()));
+                Log.d(TAG, "saveState: GAME TIME MS: " + (SystemClock.elapsedRealtime() - chronometer.getBase()));
+                chronometer.stop();
+            } else {
+                editor.putLong("Game Time Loss" + (sharedPreferences.getInt("Games Played", 0) + 1), (SystemClock.elapsedRealtime() - chronometer.getBase()));
                 Log.d(TAG, "saveState: GAME TIME MS: " + (SystemClock.elapsedRealtime() - chronometer.getBase()));
                 chronometer.stop();
             }
@@ -397,9 +407,11 @@ public class GameActivity extends AppCompatActivity {
             Log.d(TAG, "endGame: GAME WON");
             WinningDialog winningDialog = new WinningDialog(GameActivity.this);
             winningDialog.startLoadingDialog();
+            Toast.makeText(GameActivity.this, "Game Won", Toast.LENGTH_LONG).show();
             gameWon = true;
         } else {
             Log.d(TAG, "endGame: GAME LOSS");
+            Toast.makeText(GameActivity.this, "Game Loss", Toast.LENGTH_LONG).show();
             gameWon = false;
         }
         onBackPressed();

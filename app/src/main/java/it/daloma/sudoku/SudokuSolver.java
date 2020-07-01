@@ -9,16 +9,14 @@ public class SudokuSolver {
 
     // we define a simple grid to solve. Grid is stored in a 2D Array
     private int[][] board;
-    public static final int EMPTY = 0; // empty cell
-    public static final int SIZE = 9; // size of our Sudoku grids
+    private static final int EMPTY = 0; // empty cell
+    private static final int SIZE = 9; // size of our Sudoku grids
 
-    public SudokuSolver(int[][] board) {
+    SudokuSolver(int[][] board) {
         this.board = new int[SIZE][SIZE];
 
         for (int i = 0; i < SIZE; i++) {
-            for (int j = 0; j < SIZE; j++) {
-                this.board[i][j] = board[i][j];
-            }
+            System.arraycopy(board[i], 0, this.board[i], 0, SIZE);
         }
     }
 
@@ -60,7 +58,7 @@ public class SudokuSolver {
 
     // Solve method. We will use a recursive BackTracking algorithm.
     // we will see better approaches in next video :)
-    public boolean solve() {
+    boolean solve() {
         for (int row = 0; row < SIZE; row++) {
             for (int col = 0; col < SIZE; col++) {
                 // we search an empty cell
@@ -87,7 +85,7 @@ public class SudokuSolver {
         return true; // sudoku solved
     }
 
-    public int[][] getBoard() {
+    int[][] getBoard() {
         return board;
     }
 

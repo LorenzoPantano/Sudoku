@@ -19,7 +19,6 @@ public class StatsActivity extends AppCompatActivity {
 
     private static final String TAG = "STATS_ACTIVITY";
     private Button[] diffButtons = new Button[3];
-    private ImageButton imgbtnBackStats;
     private static final int[] BUTTONS_ID = {
             R.id.btnEasy,
             R.id.btnMedium,
@@ -51,7 +50,7 @@ public class StatsActivity extends AppCompatActivity {
         tvBestTimeNumber = findViewById(R.id.tvBestTimeNumber);
         tvAverageTimeNumber = findViewById(R.id.tvAverageTimeNumber);
 
-        imgbtnBackStats = findViewById(R.id.imgbtnBackStats);
+        ImageButton imgbtnBackStats = findViewById(R.id.imgbtnBackStats);
         imgbtnBackStats.setOnClickListener(statsActivityClickListener);
 
         updateTextViews();
@@ -62,26 +61,32 @@ public class StatsActivity extends AppCompatActivity {
         int games_played = sharedPreferences.getInt("Games Played", 0);
         int games_won = sharedPreferences.getInt("Games Won", 0);
         tvGamesPlayedNumber.setText(Integer.toString(games_played));
-        tvBestTimeNumber.setText(calculcateBestTime());
+
         tvAverageTimeNumber.setText(calculcateAverageTime());
         tvGamesWonNumber.setText(Integer.toString(games_won));
         if (games_won == 0) {
-            tvWinRateNumber.setText("No games won");
-            return;
+            tvWinRateNumber.setText(R.string.stats_no_games_won);
+            tvBestTimeNumber.setText(R.string.stats_no_games_won);
         }
-        tvWinRateNumber.setText(Double.toString((games_won/games_won)*100) + "%");
+        else {
+            Log.d(TAG, "updateTextViews: GAMES WON: " + games_won);
+            Log.d(TAG, "updateTextViews: GAMES PLAYED: " + games_played);
+            float winrate = (float) games_won/games_played;
+            tvWinRateNumber.setText(String.format("%s%%", winrate * 100));
+            tvBestTimeNumber.setText(calculcateBestTime());
+        }
     }
 
     private String calculcateAverageTime() {
-        int gameNumber = sharedPreferences.getInt("Games Played", 0);
+        int gameNumber = sharedPreferences.getInt("Games Won", 0);
         ArrayList<Long> timesForDifficulty = new ArrayList<>();
-        for (int game = gameNumber; game > 0 ; game--) {
-            Log.d(TAG, "calculcateBestTime: GAME: " + game + " TIME MS: " + sharedPreferences.getLong("Game Time " + game, 0));
-            timesForDifficulty.add(sharedPreferences.getLong("Game Time " + game, 0));
-        }
         if (gameNumber == 0) {
-            return "No games played";
+            return getResources().getString(R.string.stats_no_games_won);
         } else {
+            for (int game = gameNumber; game > 0 ; game--) {
+                Log.d(TAG, "calculcateBestTime: GAME: " + game + " TIME MS: " + sharedPreferences.getLong("Game Time Win" + game, 0));
+                timesForDifficulty.add(sharedPreferences.getLong("Game Time Win" + game, 0));
+            }
             long totalSumTimes = 0;
             for (long time: timesForDifficulty) {
                 totalSumTimes = totalSumTimes + time;
@@ -95,15 +100,15 @@ public class StatsActivity extends AppCompatActivity {
     }
 
     private String calculcateBestTime() {
-        int gameNumber = sharedPreferences.getInt("Games Played", 0);
+        int gameNumber = sharedPreferences.getInt("Games Won", 0);
         ArrayList<Long> timesForDifficulty = new ArrayList<>();
-        for (int game = gameNumber; game > 0 ; game--) {
-            Log.d(TAG, "calculcateBestTime: GAME: " + game + " TIME MS: " + sharedPreferences.getLong("Game Time " + game, 0));
-            timesForDifficulty.add(sharedPreferences.getLong("Game Time " + game, 0));
-        }
         if (gameNumber == 0) {
-            return "No games played";
+            return getResources().getString(R.string.stats_no_games_won);
         } else {
+            for (int game = gameNumber; game > 0 ; game--) {
+                Log.d(TAG, "calculcateBestTime: GAME: " + game + " TIME MS: " + sharedPreferences.getLong("Game Time Win" + game, 0));
+                timesForDifficulty.add(sharedPreferences.getLong("Game Time Win" + game, 0));
+            }
             Collections.sort(timesForDifficulty);
             long bestTime = timesForDifficulty.get(0);
             long minutes = (bestTime / 1000) / 60;

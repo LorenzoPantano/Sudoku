@@ -41,7 +41,7 @@ public class MainActivity extends AppCompatActivity {
     private ImageButton imgbtnInfo, imgbtnSettings, imgbtnStats, imgbtnArrowLeft, imgbtnArrowRight;
     private Button btnNewGame, btnResume;
     private TextSwitcher textSwitcherDifficulty;
-    private static final String[] difficulties = {"Easy", "Medium", "Hard"};
+    private static final int[] difficulties = {R.string.difficulty_Easy, R.string.difficulty_Medium, R.string.difficulty_Hard};
     private int selectedDifficulty = 0;  //Potrebbe essere preso da SharedPreferences salvando l'ultima partita
     private SudokuGenerator sudokuGenerator;
     private LoadingDialog loadingDialog;
@@ -107,7 +107,7 @@ public class MainActivity extends AppCompatActivity {
                 return tvDifficulty;
             }
         });
-        textSwitcherDifficulty.setCurrentText(difficulties[selectedDifficulty]);
+        textSwitcherDifficulty.setCurrentText(getResources().getString(difficulties[selectedDifficulty]));
         Animation inAnimation = AnimationUtils.loadAnimation(this, android.R.anim.slide_in_left);
         Animation outAnimation = AnimationUtils.loadAnimation(this, android.R.anim.slide_out_right);
         inAnimation.setDuration(200);
@@ -193,7 +193,7 @@ public class MainActivity extends AppCompatActivity {
                 case R.id.imgbtnArrowLeft:
                     selectedDifficulty  = (selectedDifficulty - 1) % 3;
                     if (selectedDifficulty == -1) selectedDifficulty = 2;
-                    textSwitcherDifficulty.setText(difficulties[selectedDifficulty]);
+                    textSwitcherDifficulty.setText(getResources().getString(difficulties[selectedDifficulty]));
                     selectSharedPrefs();
                     if (sharedPreferences.getInt("difficulty", -1) == -1) {
                         makeInvisibleButton(btnResume);
@@ -205,7 +205,7 @@ public class MainActivity extends AppCompatActivity {
 
                 case R.id.imgbtnArrowRight:
                     selectedDifficulty  = (selectedDifficulty + 1) % 3;
-                    textSwitcherDifficulty.setText(difficulties[selectedDifficulty]);
+                    textSwitcherDifficulty.setText(getResources().getString(difficulties[selectedDifficulty]));
                     selectSharedPrefs();
                     if (sharedPreferences.getInt("difficulty", -1) == -1) {
                         makeInvisibleButton(btnResume);

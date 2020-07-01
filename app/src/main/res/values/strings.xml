@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">Sudoku</string>
-    <string name="title">sudoku.</string>
+    <string name="title" translatable="false">sudoku.</string>
     <string name="new_game">New Game</string>
     <string name="resume">Resume</string>
     <string name="difficulty">Difficulty</string>
@@ -23,7 +23,7 @@
     <!-- Info Dialog-->
     <string name="version">version 1.0.0</string>
     <string name="developed">This app is developed by the group \"Daloma\"</string>
-    <string name="authors">Lorenzo Pantano\nMatteo D\'Alessandro\nDavide Palleschi</string>
+    <string name="authors" translatable="false">Lorenzo Pantano\nMatteo D\'Alessandro\nDavide Palleschi</string>
     <string name="mobileprog">For Mobile Programming 2020</string>
 
     <!-- Loading Dialog-->
@@ -42,6 +42,8 @@
     <!-- Preference Titles -->
     <string name="general">General</string>
     <string name="gameSettings">Game Settings</string>
+    <string name="stats_no_games_won">No games won</string>
+    <string name="stats_no_games_played">No Games Played</string>
 
 
 </resources>

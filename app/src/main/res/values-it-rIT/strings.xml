@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Sudoku</string>
+    <string name="new_game">Nuova Partita</string>
+    <string name="resume">Riprendi</string>
+    <string name="difficulty">Difficoltà</string>
+    <string name="difficulty_Easy">Facile</string>
+    <string name="difficulty_Medium">Medio</string>
+    <string name="difficulty_Hard">Difficile</string>
+    <string name="title_activity_settings">Impostazioni</string>
+    <string name="title_activity_stats">Statistiche</string>
+    <string name="games_stats">Partite</string>
+    <string name="time_stats">Tempi</string>
+    <string name="games_played">Partite Giocate</string>
+    <string name="games_won">Partite Vinte</string>
+    <string name="win_rate">Rate Vittoria</string>
+    <string name="best_time">Miglior Tempo</string>
+    <string name="average_time">Tempo Medio</string>
+    <string name="version">versione 1.0.0</string>
+    <string name="developed">Quest\'app è stata sviluppata dal gruppo \"Daloma\":</string>
+    <string name="mobileprog">Per Mobile Programming 2020</string>
+    <string name="loading_dialog">Preparando una nuova partita</string>
+    <string name="resuming_dialog">Riprendendo partita...</string>
+    <string name="winning_dialog">Hai vinto la partita</string>
+    <string name="new_game_error_dialog">C\'è stato un errore nel generare una nuova partita. Controlla la connessione e riprova.</string>
+    <string name="general">Generali</string>
+    <string name="gameSettings">Impostazioni Partita</string>
+    <string name="stats_no_games_won">Nessuna partita vinta</string>
+    <string name="stats_no_games_played">Nessuna partita giocata</string>
+</resources>
