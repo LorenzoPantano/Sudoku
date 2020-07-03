@@ -1,29 +1,20 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <PreferenceCategory android:layout="@layout/preference_category_general">
-
-        <SwitchPreferenceCompat
-            app:defaultValue="false"
-            app:key="sounds"
-            app:title="Sounds" />
-
-    </PreferenceCategory>
-
     <PreferenceCategory android:layout="@layout/preferences_category_game_settings">
 
         <SwitchPreferenceCompat
             app:defaultValue="true"
             app:key="showElapsedTime"
-            app:summary="Starts a counter for the time spent on a game"
-            app:title="Show Elapsed Time" />
+            app:summary="@string/show_elapsed_time_summary"
+            app:title="@string/show_elapsed_time" />
 
 
         <SwitchPreferenceCompat
             app:defaultValue="true"
             app:key="highlightSelected"
-            app:summary="Checks if the input number is in the right position"
-            app:title="Highlight Selected" />
+            app:summary="@string/highlight_selected_summary"
+            app:title="@string/highlight_selected" />
 
 
     </PreferenceCategory>

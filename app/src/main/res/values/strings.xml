@@ -8,6 +8,8 @@
     <string name="difficulty_Medium">Medium</string>
     <string name="difficulty_Hard">Hard</string>
     <string name="title_activity_settings">Settings</string>
+    <string name="game_won">Game Won</string>
+    <string name="game_loss">Game Loss</string>
 
     <!-- Stats Activity-->
     <string name="title_activity_stats">Statistics</string>
@@ -30,7 +32,7 @@
     <string name="loading_dialog">Preparing new game</string>
 
     <!-- Resuming Dialog-->
-    <string name="resuming_dialog">Resuming game...</string>
+    <string name="resuming_dialog">Resuming game…</string>
 
     <!-- Winning Dialog-->
     <string name="winning_dialog">You won the game</string>
@@ -44,6 +46,12 @@
     <string name="gameSettings">Game Settings</string>
     <string name="stats_no_games_won">No games won</string>
     <string name="stats_no_games_played">No Games Played</string>
+    <string name="show_elapsed_time_summary">Starts a counter for the time spent on a game</string>
+    <string name="show_elapsed_time">Show Elapsed Time</string>
+    <string name="highlight_selected_summary">Highlight selected row and column</string>
+    <string name="highlight_selected">Highlight Selected</string>
+    <string name="are_you_sure">Are you sure?</string>
+    <string name="validate">Do you really want to validate?</string>
 
 
 </resources>

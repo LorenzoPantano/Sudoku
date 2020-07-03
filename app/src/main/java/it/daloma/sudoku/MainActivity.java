@@ -4,8 +4,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.preference.PreferenceManager;
-
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -23,29 +21,51 @@ import android.widget.ImageButton;
 import android.widget.TextSwitcher;
 import android.widget.TextView;
 import android.widget.ViewSwitcher;
-
 import com.google.gson.Gson;
-
-import java.lang.reflect.Array;
-import java.lang.reflect.Type;
-
 import it.daloma.sudoku.models.Board;
 import it.daloma.sudoku.utils.InfoDialog;
 import it.daloma.sudoku.utils.LoadingDialog;
 import it.daloma.sudoku.utils.ResumingGameDialog;
 import it.daloma.sudoku.utils.Utils;
 
+/*
+*
+* SUDOKU.
+*
+* MOBILE PROGRAMMING 2020, DALOMA:
+*
+* Lorenzo Pantano
+* Matteo D'Alessandro
+* Davide Palleschi
+*
+*
+* MAIN ACTIVITY
+*
+*
+*
+* */
+
 public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "MAIN_ACTIVITY";
+
+    //Buttons
     private ImageButton imgbtnInfo, imgbtnSettings, imgbtnStats, imgbtnArrowLeft, imgbtnArrowRight;
     private Button btnNewGame, btnResume;
+
+    //Text Switcher
     private TextSwitcher textSwitcherDifficulty;
+
+    //Attributes
     private static final int[] difficulties = {R.string.difficulty_Easy, R.string.difficulty_Medium, R.string.difficulty_Hard};
     private int selectedDifficulty = 0;  //Potrebbe essere preso da SharedPreferences salvando l'ultima partita
     private SudokuGenerator sudokuGenerator;
+
+    //Dialogs
     private LoadingDialog loadingDialog;
     private InfoDialog infoDialog;
+
+    //Shared preferences
     SharedPreferences sharedPreferencesEasy;
     SharedPreferences sharedPreferencesMedium;
     SharedPreferences sharedPreferencesHard;
@@ -87,6 +107,8 @@ public class MainActivity extends AppCompatActivity {
         btnResume = findViewById(R.id.btnResume);
         btnResume.setOnClickListener(mainActivityButtonsListener);
 
+        //Se non c'è una partita disponibile per essere ripresa nelle shared prefs
+        //Il bottone resume non viene mostrato
         if (sharedPreferences.getInt("difficulty", -1) == -1) {
             makeInvisibleButton(btnResume);
         } else {
@@ -154,13 +176,6 @@ public class MainActivity extends AppCompatActivity {
         button.setClickable(true);
     }
 
-    private boolean isNetworkAvailable() {
-        ConnectivityManager connectivityManager
-                = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
-        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
-    }
-
 
     private class MainActivityButtonsListener implements View.OnClickListener {
 
@@ -168,17 +183,21 @@ public class MainActivity extends AppCompatActivity {
         public void onClick(View v) {
             switch (v.getId()) {
                 case R.id.btnNewGame:
+                    //Viene generato un nuovo puzzle, la Game Activity viene lanciata dopo la risposta di volley (vedi puzzleGenerator())
                     sudokuGenerator.puzzleGenerator(selectedDifficulty);
                     break;
 
                 case R.id.btnResume:
+                    //Riprende una partita in corso
                     ResumingGameDialog resumingGameDialog = new ResumingGameDialog(MainActivity.this);
                     resumingGameDialog.startLoadingDialog();
                     Intent gameIntent = new Intent(MainActivity.this, GameActivity.class);
                     Gson gson = new Gson();
+                    //Carica la partita lasciata in sospeso
                     String boardFromSharedPrefs = sharedPreferences.getString("saved_board", "DEFAULT");
                     Log.d(TAG, "onClick: FROM SHARED PREFS " + boardFromSharedPrefs);
                     Board board = gson.fromJson(boardFromSharedPrefs, Board.class);
+                    //Viene risolta prima e passata nell'intent
                     SudokuSolver sudokuSolver = new SudokuSolver(Utils.convertBoardToMatrix(board));
                     sudokuSolver.solve();
                     int[] monoBoard = Utils.convertBiToMonodimensionalArray(sudokuSolver.getBoard());

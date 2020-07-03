@@ -3,6 +3,14 @@ package it.daloma.sudoku.utils;
 import it.daloma.sudoku.models.Board;
 import it.daloma.sudoku.models.Cell;
 
+/*
+* UTILS
+*
+* Utils varie per convertire array monodimensionali a bidimensionali.
+* Usata ad esempio nella comparazione per verificare se un puzzle è corretto.
+*
+* */
+
 public class Utils {
 
     public static int[] convertBiToMonodimensionalArray(int[][] board) {

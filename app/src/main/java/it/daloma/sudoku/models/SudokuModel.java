@@ -1,31 +1,24 @@
 package it.daloma.sudoku.models;
 
+/*
+* SUDOKU MODEL
+*
+* Fa da tramite tra Game Activity e SudokuBoardView per determinare quali celle siano state selezionate.
+*
+* */
+
 public class SudokuModel {
 
     private Board board;
-    private boolean isNewGame;
     private int selectedRow = -1;
     private int selectedCol = -1;
 
-    public SudokuModel(Board board, boolean isNewGame) {
+    public SudokuModel(Board board) {
         this.board = board;
-        this.isNewGame = isNewGame;
     }
 
     public Board getBoard() {
         return board;
-    }
-
-    public void setBoard(Board board) {
-        this.board = board;
-    }
-
-    public boolean isNewGame() {
-        return isNewGame;
-    }
-
-    public void setNewGame(boolean newGame) {
-        isNewGame = newGame;
     }
 
     public int getSelectedRow() {

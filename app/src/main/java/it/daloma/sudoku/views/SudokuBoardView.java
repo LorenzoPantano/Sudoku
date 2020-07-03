@@ -24,11 +24,12 @@ import it.daloma.sudoku.models.SudokuModel;
 
 public class SudokuBoardView extends View {
 
+    //Shared preferences per impostazioni (Evidenzia celle SI/NO)
     SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
+    private boolean highlightSettings = sharedPreferences.getBoolean(SettingsActivity.HIGHLIGHT_SELECTED, true);
 
 
     private static final String TAG = "SUDOKUVIEWGRID";
-    private boolean highlightSettings = sharedPreferences.getBoolean(SettingsActivity.HIGHLIGHT_SELECTED, true);
 
     //Paints
     private Paint thinPaint;
@@ -106,7 +107,7 @@ public class SudokuBoardView extends View {
         textPaintHighlighted.setTextSize(50);
         textPaintHighlighted.setColor(Color.WHITE);
 
-        //Paint per board iniziale
+        //Paint per board iniziale (numeri in grassetto)
         textPaintStarting = new Paint(Paint.ANTI_ALIAS_FLAG);
         textPaintStarting.setTextSize(50);
         textPaintStarting.setColor(Color.BLACK);

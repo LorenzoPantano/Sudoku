@@ -27,4 +27,12 @@
     <string name="gameSettings">Impostazioni Partita</string>
     <string name="stats_no_games_won">Nessuna partita vinta</string>
     <string name="stats_no_games_played">Nessuna partita giocata</string>
+    <string name="show_elapsed_time_summary">Mostra in tempo speso su una partita</string>
+    <string name="show_elapsed_time">Mostra tempo</string>
+    <string name="highlight_selected_summary">Evidenzia la riga e la colonna selezionata</string>
+    <string name="highlight_selected">Evidenzia</string>
+    <string name="game_won">Partita Vinta</string>
+    <string name="game_loss">Partita Persa</string>
+    <string name="are_you_sure">Are you sure?</string>
+    <string name="validate">Do you really want to validate?</string>
 </resources>
