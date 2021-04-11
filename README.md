@@ -8,3 +8,7 @@ The application is built using
  - https://github.com/bertoort/sugoku API for the puzzle generation
  - Shared Preferences to store uncompleted games, settings and game stats
  - Custom Sudoku Board View
+
+Project Analysis (in Italian):
+
+[Sudoku - Analisi Progetto.pdf](https://github.com/LorenzoPantano/Sudoku/files/6292622/Sudoku.-.Analisi.Progetto.pdf)
